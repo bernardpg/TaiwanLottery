@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="LotteryStoreCollectionViewCell" id="gTV-IL-0wX" customClass="LotteryStoreCollectionViewCell" customModule="TaiwanLottery" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="190" height="75"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="190" height="75"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HXf-OL-dRu">
+                        <rect key="frame" x="8" y="8" width="41.5" height="21.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" systemColor="systemOrangeColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FmW-A6-8fE">
+                        <rect key="frame" x="8" y="41" width="91" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D5g-Mw-HXv">
+                        <rect key="frame" x="105" y="14" width="81" height="9.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" systemColor="systemOrangeColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G1C-el-Pcq">
+                        <rect key="frame" x="109" y="30" width="73" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="40" id="k1z-Jh-rL5"/>
+                        </constraints>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                        <state key="normal" title="導航" image="iconDirection">
+                            <color key="titleColor" systemColor="systemBackgroundColor"/>
+                        </state>
+                        <buttonConfiguration key="configuration" style="filled" image="iconDirection" title="導航">
+                            <color key="baseForegroundColor" systemColor="systemBackgroundColor"/>
+                            <color key="baseBackgroundColor" systemColor="systemOrangeColor"/>
+                        </buttonConfiguration>
+                        <connections>
+                            <action selector="lotteryNavigationBtnPress:" destination="gTV-IL-0wX" eventType="touchUpInside" id="8ax-wT-PeH"/>
+                        </connections>
+                    </button>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="D5g-Mw-HXv" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="14" id="552-Kh-kRd"/>
+                <constraint firstItem="HXf-OL-dRu" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="8" id="5iD-K4-YKs"/>
+                <constraint firstAttribute="bottom" secondItem="FmW-A6-8fE" secondAttribute="bottom" constant="14" id="5tG-yb-Nud"/>
+                <constraint firstItem="FmW-A6-8fE" firstAttribute="leading" secondItem="HXf-OL-dRu" secondAttribute="leading" id="Ffz-ST-GIz"/>
+                <constraint firstAttribute="trailing" secondItem="D5g-Mw-HXv" secondAttribute="trailing" constant="4" id="OJm-RC-vTx"/>
+                <constraint firstItem="G1C-el-Pcq" firstAttribute="centerX" secondItem="D5g-Mw-HXv" secondAttribute="centerX" id="bW6-aw-VRP"/>
+                <constraint firstItem="G1C-el-Pcq" firstAttribute="top" secondItem="D5g-Mw-HXv" secondAttribute="bottom" constant="6.5" id="bZQ-gU-Oeu"/>
+                <constraint firstAttribute="bottom" secondItem="G1C-el-Pcq" secondAttribute="bottom" constant="5" id="ipt-9J-0ZV"/>
+                <constraint firstItem="D5g-Mw-HXv" firstAttribute="centerY" secondItem="HXf-OL-dRu" secondAttribute="centerY" id="k7a-9Y-fxz"/>
+                <constraint firstItem="FmW-A6-8fE" firstAttribute="centerY" secondItem="G1C-el-Pcq" secondAttribute="centerY" id="mhQ-7J-xKe"/>
+                <constraint firstItem="G1C-el-Pcq" firstAttribute="leading" secondItem="FmW-A6-8fE" secondAttribute="trailing" constant="10" id="p5e-Qe-zwj"/>
+                <constraint firstAttribute="trailing" secondItem="G1C-el-Pcq" secondAttribute="trailing" constant="8" id="sM5-nS-6Mv"/>
+                <constraint firstItem="FmW-A6-8fE" firstAttribute="top" secondItem="HXf-OL-dRu" secondAttribute="bottom" constant="11.5" id="weE-zs-T3J"/>
+                <constraint firstItem="HXf-OL-dRu" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="zmk-vU-Iqn"/>
+            </constraints>
+            <size key="customSize" width="190" height="75"/>
+            <connections>
+                <outlet property="lotteryAddress" destination="FmW-A6-8fE" id="ucM-1n-abV"/>
+                <outlet property="lotteryDistance" destination="D5g-Mw-HXv" id="BbZ-zK-wQQ"/>
+                <outlet property="lotteryName" destination="HXf-OL-dRu" id="6Kd-9q-OBt"/>
+                <outlet property="lotteryNavigatonBtn" destination="G1C-el-Pcq" id="GTV-ci-B4W"/>
+            </connections>
+            <point key="canvasLocation" x="237.68115942028987" y="72.65625"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="iconDirection" width="14" height="19"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
