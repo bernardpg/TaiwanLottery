@@ -151,12 +151,12 @@ extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDe
         let allAnnotaitons = self.m_mapView.annotations
         self.m_mapView.removeAnnotations(allAnnotaitons)
         if m_routeCoordinates.count != 0 {
-            for location in m_routeCoordinates {
-                let lotteriesPin = MKPointAnnotation()
+            for (index,location) in m_routeCoordinates.enumerated() {
+                let lotteriesPin = CustomPointAnnotation()
                 lotteriesPin.coordinate = CLLocationCoordinate2D(
                     latitude: location.coordinate.latitude,
                     longitude: location.coordinate.longitude)
-//                lotteriesPin.title = "unselected"
+                lotteriesPin.lotteryId = index
                 m_mapView.addAnnotation(lotteriesPin)
             }
         }
@@ -171,16 +171,7 @@ extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDe
             // Assign Annotation
             annotationView?.annotation = annotation
         }
-        // enum 判別狀態
-        // isselected 判別
-//        switch annotation.title {
-//        case "selected":
-//            annotationView?.image = UIImage(named: "mapPinOn")
-//        case "unselected":
-//            annotationView?.image = UIImage(named: "mapPinOff")
-//        default:
-//            break
-//        }
+        annotationView?.image = UIImage(named: "mapPinOff")
         return annotationView
     }
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
@@ -196,7 +187,6 @@ extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDe
             guard let lat = view.annotation?.coordinate.latitude else { return }
             guard let lon = view.annotation?.coordinate.longitude else { return }
             if item.lon == lon && item.lat == lat {
-                print(index)
                 let path = IndexPath(item: index, section: 0)
                 m_lotteryInfocv.scrollToItem(at: path, at: .centeredHorizontally, animated: true)
             }
