@@ -28,10 +28,12 @@ class LotteryStoresMapViewController: UIViewController {
     private var m_kSelectedRow: Int = 0 {
         didSet {
             DispatchQueue.main.async {
-                let path = IndexPath(item: self.m_kSelectedRow, section: 0)
-                self.m_lotteryInfocv.scrollToItem(at: path, at: .centeredHorizontally, animated: true)
+                let indexPath = NSIndexPath(item: self.m_kSelectedRow, section: 0)
+//                self.m_lotteryInfocv.scrollToItem(at: indexPath as IndexPath, at: .centeredHorizontally, animated: true)
                 for (index, item) in  (self.m_mapView.annotations).enumerated() {
-                    if self.m_kSelectedRow == index {
+                    if  index == self.m_kSelectedRow {
+                        print(index)
+                        print(item.coordinate)
                         self.m_mapView.selectAnnotation(item, animated: true)
                     }
                 }
@@ -41,14 +43,18 @@ class LotteryStoresMapViewController: UIViewController {
     weak var mapLotteryListDatasource: LotteryListDatasource?
     weak var navigationLocaitonDelegate: PassoutNavigationDelegate?
     private var m_routeCoordinates: [CLLocation] = []
-    private lazy var m_lotteryInfocv: UICollectionView = {
+    private lazy var m_cvLotteryInfo: UICollectionView = {
         let layout: UICollectionViewLayout = {
             let layout = UICollectionViewFlowLayout()
             layout.scrollDirection = .horizontal
+            layout.minimumLineSpacing = 10
+            layout.sectionInset = UIEdgeInsets(top: 0, left: 35, bottom: 0, right: 35)
+            let itemWidth = UIScreen.main.bounds.width - (35 * 2)
+            layout.itemSize = CGSize(width: itemWidth, height: 90)
             return layout
         }()
-        let rect = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 0)
-        let collection = UICollectionView(frame: rect, collectionViewLayout: layout)
+//        let rect = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 0)
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.register(
             UINib(nibName: "LotteryStoreCollectionViewCell", bundle: nil),
             forCellWithReuseIdentifier: "LotteryStoreCollectionViewCell")
@@ -59,23 +65,49 @@ class LotteryStoresMapViewController: UIViewController {
     let url = URL(string: "https://smuat.megatime.com.tw/taiwanlottery/api/Home/Station")!
     private var m_locationManager: CLLocationManager = CLLocationManager()
     private var m_currentLocation: CLLocation?
+    var authorizationStatus: CLAuthorizationStatus?
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         m_mapView.delegate = self
         m_mapView.showsUserLocation = true
-        m_lotteryInfocv.delegate = self
-        m_lotteryInfocv.dataSource = self
-        m_lotteryInfocv.allowsMultipleSelection = true
+        m_cvLotteryInfo.delegate = self
+        m_cvLotteryInfo.dataSource = self
+        m_cvLotteryInfo.allowsMultipleSelection = true
         m_locationManager.delegate = self
-        m_locationManager.requestWhenInUseAuthorization()
-        m_locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        m_locationManager.distanceFilter = kCLHeadingFilterNone
-        m_locationManager.stopUpdatingLocation()
-        if CLLocationManager.locationServicesEnabled() {
+        if #available(iOS 14, *) {
+            authorizationStatus = m_locationManager.authorizationStatus
+        } else {
+            authorizationStatus = m_locationManager.authorizationStatus
+        }
+
+        switch authorizationStatus {
+        case .notDetermined:
+            m_locationManager.requestWhenInUseAuthorization()
+            m_locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            m_locationManager.distanceFilter = kCLHeadingFilterNone
             m_locationManager.requestWhenInUseAuthorization()
             m_locationManager.startUpdatingLocation()
-        }
+// First time lanch app need to get authorize from user
+          fallthrough
+        case .authorizedWhenInUse:
+            m_locationManager.requestWhenInUseAuthorization()
+            m_locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            m_locationManager.distanceFilter = kCLHeadingFilterNone
+            m_locationManager.requestWhenInUseAuthorization()
+            m_locationManager.startUpdatingLocation()
+
+        case .denied:
+          let alertController = UIAlertController(
+            title: "定位權限已關閉",
+            message: "如要變更權限，請至 設定 > 隱私權 > 定位服務 開啟",
+            preferredStyle: .alert)
+          let okAction = UIAlertAction(title: "確認", style: .default, handler: nil)
+          alertController.addAction(okAction)
+          self.present(alertController, animated: true, completion: nil)
+        default:
+          break }
+//        m_locationManager.stopUpdatingLocation()
         setupUI()
     }
     // MARK: - UI setup (Helper)
@@ -87,13 +119,13 @@ class LotteryStoresMapViewController: UIViewController {
             m_mapView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             m_mapView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
             m_mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
-        m_mapView.addSubview(m_lotteryInfocv)
-        m_lotteryInfocv.translatesAutoresizingMaskIntoConstraints = false
+        m_mapView.addSubview(m_cvLotteryInfo)
+        m_cvLotteryInfo.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            m_lotteryInfocv.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
-            m_lotteryInfocv.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
-            m_lotteryInfocv.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
-            m_lotteryInfocv.heightAnchor.constraint(equalTo: m_lotteryInfocv.widthAnchor, multiplier: 1.0/5.0)
+            m_cvLotteryInfo.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            m_cvLotteryInfo.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
+            m_cvLotteryInfo.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
+            m_cvLotteryInfo.heightAnchor.constraint(equalTo: m_cvLotteryInfo.widthAnchor, multiplier: 1.0/5.0)
         ])
         button = DropDownBtn.init(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         button.setTitle(" 1 公里", for: .normal)
@@ -116,7 +148,7 @@ class LotteryStoresMapViewController: UIViewController {
         DispatchQueue.main.async {
                     self.updateCoordinate()
                     self.addPins()
-                    self.m_lotteryInfocv.reloadData()
+                    self.m_cvLotteryInfo.reloadData()
         }
     }
 }
@@ -151,11 +183,12 @@ extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDe
         let allAnnotaitons = self.m_mapView.annotations
         self.m_mapView.removeAnnotations(allAnnotaitons)
         if m_routeCoordinates.count != 0 {
-            for (index,location) in m_routeCoordinates.enumerated() {
+            for (index, location) in m_routeCoordinates.enumerated() {
                 let lotteriesPin = CustomPointAnnotation()
                 lotteriesPin.coordinate = CLLocationCoordinate2D(
                     latitude: location.coordinate.latitude,
                     longitude: location.coordinate.longitude)
+                print(lotteriesPin.coordinate.latitude)
                 lotteriesPin.lotteryId = index
                 m_mapView.addAnnotation(lotteriesPin)
             }
@@ -183,12 +216,21 @@ extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDe
         mapView.setRegion(region, animated: true)
         view.image = UIImage(named: "mapPinOn")
         guard let listLottery =  mapLotteryListDatasource?.passDataFromParent() else { return }
+/*        for annotationsItem in m_mapView.annotations {
+            if annotationsItem.coordinate.latitude ==
+                listLottery[indexPath.row].lat {
+                self.m_mapView.selectAnnotation(annotationsItem, animated: true)
+            }
+        }
+*/
         for (index, item) in listLottery.enumerated() {
             guard let lat = view.annotation?.coordinate.latitude else { return }
             guard let lon = view.annotation?.coordinate.longitude else { return }
+            print(lat, lon)
             if item.lon == lon && item.lat == lat {
                 let path = IndexPath(item: index, section: 0)
-                m_lotteryInfocv.scrollToItem(at: path, at: .centeredHorizontally, animated: true)
+                print(index)
+                m_cvLotteryInfo.scrollToItem(at: path, at: .centeredHorizontally, animated: true)
             }
         }
     }
@@ -200,70 +242,22 @@ extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDe
 // MARK: - CollectionView FlowLayout
 
 extension LotteryStoresMapViewController: UICollectionViewDelegateFlowLayout, UIScrollViewDelegate {
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath) -> CGSize {
-            CGSize(
-            width: collectionView.frame.width - 40,
-            height: collectionView.frame.height)
-    }
-    func scrollViewWillEndDragging(
-        _ scrollView: UIScrollView,
-        withVelocity velocity: CGPoint,
-        targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        // change to collectionview index didset
-        guard let layout = m_lotteryInfocv.collectionViewLayout as? UICollectionViewFlowLayout else { return   }
-        let cellWidthIncludingSpacing = layout.itemSize.width + layout.minimumLineSpacing
-        let offset = targetContentOffset.pointee
-        let index = (offset.x + scrollView.contentInset.left) / cellWidthIncludingSpacing
-        _ = floor(index)
-        guard let listLottery =  mapLotteryListDatasource?.passDataFromParent() else { return }
-        if velocity.x == 0 {
-            // offset cell 距離最近判斷
-        } else {
-            if velocity.x > 0 && self.m_kSelectedRow < listLottery.count {
-                m_kSelectedRow += 1
-            } else if velocity.x < 0 {
-                m_kSelectedRow -= 1
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        
+            guard let layout = m_cvLotteryInfo.collectionViewLayout as? UICollectionViewFlowLayout else { return   }
+            let cellWidthIncludingSpacing = layout.itemSize.width + layout.minimumLineSpacing // Calculate cell size
+            
+            let offset = scrollView.contentOffset.x
+            let index = (offset + scrollView.contentInset.left) / cellWidthIncludingSpacing // Calculate the cell need to be center
+
+            if velocity.x > 0 { // Scroll to -->
+                targetContentOffset.pointee = CGPoint(x: ceil(index) * cellWidthIncludingSpacing - scrollView.contentInset.right, y: -scrollView.contentInset.top)
+            } else if velocity.x < 0 { // Scroll to <---
+                targetContentOffset.pointee = CGPoint(x: floor(index) * cellWidthIncludingSpacing - scrollView.contentInset.left, y: -scrollView.contentInset.top)
+            } else if velocity.x == 0 { // No dragging
+                targetContentOffset.pointee = CGPoint(x: round(index) * cellWidthIncludingSpacing - scrollView.contentInset.left, y: -scrollView.contentInset.top)
             }
         }
-        //        let nearestPageOffset = (roundedIndex) * cellWidthIncludingSpacing
-        //        offset = CGPoint(x: roundedIndex * cellWidthIncludingSpacing - scrollView.contentInset.left, y: -scrollView.contentInset.top)
-        //        targetContentOffset.pointee = offset
-        //   func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        /*
-         let layout = self.lotteryInfocv.collectionViewLayout as! UICollectionViewFlowLayout
-         let cellWidthIncludingSpacing = layout.itemSize.width + layout.minimumLineSpacing
-         
-         var offset = targetContentOffset.pointee
-         let index = (offset.x + scrollView.contentInset.left) / cellWidthIncludingSpacing
-         let roundedIndex = floor(index)
-         
-         print(roundedIndex)
-         
-         offset = CGPoint(x: roundedIndex * cellWidthIncludingSpacing - scrollView.contentInset.left, y: -scrollView.contentInset.top)
-         print(offset)
-         
-         targetContentOffset.pointee = offset
-         
-         print(targetContentOffset.pointee)
-         */
-        //        selectedIndex = indexPath.row
-        //        setRegionToAnnotation()
-    }
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
-    }
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        10
-    }
 }
 
 // MARK: - CollectionViewDelegate
@@ -292,8 +286,10 @@ extension LotteryStoresMapViewController: UICollectionViewDataSource {
         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: "LotteryStoreCollectionViewCell",
-            for: indexPath) as? LotteryStoreCollectionViewCell else { return UICollectionViewCell()  }
-            guard let listLottery =  mapLotteryListDatasource?.passDataFromParent() else { return UICollectionViewCell() }
+            for: indexPath) as? LotteryStoreCollectionViewCell
+                else { return UICollectionViewCell()  }
+            guard let listLottery =  mapLotteryListDatasource?.passDataFromParent()
+                else { return UICollectionViewCell() }
             cell.layer.cornerRadius = 5
             cell.delegate = self
             cell.configure(
@@ -313,4 +309,8 @@ extension LotteryStoresMapViewController: LotteryStorecvCellDelegate {
         let targetLocation = CLLocationCoordinate2D(latitude: location.lat, longitude: location.lon)
         navigationLocaitonDelegate?.requestNavigation(location: targetLocation)
     }
+}
+
+class CustomPointAnnotation: MKPointAnnotation {
+    var lotteryId: Int?
 }

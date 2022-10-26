@@ -22,7 +22,7 @@ class ParentViewController: UIViewController {
                 distance: m_changeDistance)
         }
     }
-    private var m_listLotteriesInfo = LotteryStores(list: [])
+    private var m_listLotteriesInfo = [LotteryInfo]()// LotteryStores(list: [])
     // MARK: - Property
     private lazy var m_mapViewViewController = LotteryStoresMapViewController()
     let url = URL(string: "https://smuat.megatime.com.tw/taiwanlottery/api/Home/Station")!
@@ -36,7 +36,7 @@ class ParentViewController: UIViewController {
     }()
     private var m_locationManager: CLLocationManager = CLLocationManager()
     private var m_currentLocation: CLLocation?
-
+    var authorizationStatus: CLAuthorizationStatus?
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,20 +48,39 @@ class ParentViewController: UIViewController {
         m_lotteryStoreListViewController.navigationLocaitonDelegate = self
         // location manager
         m_locationManager.delegate = self
-        // ask user for location
-        m_locationManager.requestWhenInUseAuthorization()
-        // ask 定位準確度
-        m_locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        // 十公尺內 refectch // 改成任何變動都更新
-        m_locationManager.distanceFilter = kCLHeadingFilterNone
-        // kCLLocationAccuracyNearestTenMeters
-        m_locationManager.stopUpdatingLocation()
-        Task { [ weak self ] in
-            if ((await self?.locationServicesEnabled()) != nil) {
-                m_locationManager.requestWhenInUseAuthorization()
-                m_locationManager.startUpdatingLocation()
-            }
+        if #available(iOS 14, *) {
+            authorizationStatus = m_locationManager.authorizationStatus
+        } else {
+            authorizationStatus = m_locationManager.authorizationStatus
         }
+        switch authorizationStatus {
+        case .notDetermined:
+            m_locationManager.requestWhenInUseAuthorization()
+            m_locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            m_locationManager.distanceFilter = kCLHeadingFilterNone
+            m_locationManager.requestWhenInUseAuthorization()
+            m_locationManager.startUpdatingLocation()
+//            m_locationManager.stopUpdatingLocation()
+// First time lanch app need to get authorize from user
+          fallthrough
+        case .authorizedWhenInUse:
+            m_locationManager.requestWhenInUseAuthorization()
+            m_locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            m_locationManager.distanceFilter = kCLHeadingFilterNone
+            m_locationManager.requestWhenInUseAuthorization()
+            m_locationManager.startUpdatingLocation()
+//            m_locationManager.stopUpdatingLocation()
+
+        case .denied:
+          let alertController = UIAlertController(
+            title: "定位權限已關閉",
+            message: "如要變更權限，請至 設定 > 隱私權 > 定位服務 開啟",
+            preferredStyle: .alert)
+          let okAction = UIAlertAction(title: "確認", style: .default, handler: nil)
+          alertController.addAction(okAction)
+          self.present(alertController, animated: true, completion: nil)
+        default:
+          break }
         // location start
         setupNavgation()
         let notificationName = Notification.Name("changeDistance")
@@ -132,9 +151,6 @@ extension UIViewController {
         view.removeFromSuperview()
         removeFromParent()
     }
-    func locationServicesEnabled() async -> Bool {
-        CLLocationManager.locationServicesEnabled()
-    }
 }
 
 // MARK: - fetch current(Location)
@@ -146,6 +162,7 @@ extension ParentViewController: CLLocationManagerDelegate {
         if m_currentLocation == nil {
             // Zoom to user location
             if let userLocation = locations.last {
+                print(userLocation.coordinate)
                 getAPIData(
                     latitude: userLocation.coordinate.latitude,
                     longtitude: userLocation.coordinate.longitude,
@@ -161,7 +178,7 @@ extension ParentViewController: CLLocationManagerDelegate {
             url: url, lat: latitude, lon: longtitude,
             distance: distance) { [weak self] createUserResponse
                 in
-                self?.m_listLotteriesInfo = createUserResponse.content
+                self?.m_listLotteriesInfo = createUserResponse.content.list.sorted(by: { $0.distance < $1.distance })
                 self?.m_mapViewViewController.configureFromParent()
                 self?.m_lotteryStoreListViewController.configureFromParent()
         }
@@ -170,7 +187,7 @@ extension ParentViewController: CLLocationManagerDelegate {
 
 extension ParentViewController: LotteryListDatasource {
     func passDataFromParent() -> [LotteryInfo] {
-        return self.m_listLotteriesInfo.list
+        return self.m_listLotteriesInfo
     }
 }
 // MARK: Navigation Map

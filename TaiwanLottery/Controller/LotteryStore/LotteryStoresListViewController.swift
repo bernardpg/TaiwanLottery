@@ -16,7 +16,7 @@ class LotteryStoresListViewController: UIViewController {
             layout.scrollDirection = .vertical
             return layout
         }()
-        let rect = CGRect(x: 100, y: 0, width: UIScreen.main.bounds.width, height: 50)
+        let rect = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50)
         let collection = UICollectionView(frame: rect, collectionViewLayout: layout)
         collection.register(
             UINib(nibName: "LotteryStoreCollectionViewCell", bundle: nil),
@@ -25,7 +25,6 @@ class LotteryStoresListViewController: UIViewController {
         collection.delegate = self
         collection.dataSource = self
         collection.showsHorizontalScrollIndicator = false
-        collection.isPagingEnabled = true
         return collection
     }()
     weak var lotteryListDatasource: LotteryListDatasource?
@@ -48,7 +47,7 @@ class LotteryStoresListViewController: UIViewController {
             m_lotteryInfoCollectionView.topAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
             m_lotteryInfoCollectionView.bottomAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.bottomAnchor)])
+                equalTo: view.bottomAnchor)])
     }
     // MARK: configure function from ParentView
     func configureFromParent() {
