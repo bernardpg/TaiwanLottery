@@ -10,7 +10,7 @@ import MapKit
 
 class LotteryStoresListViewController: UIViewController {
     // MARK: property
-    private lazy var m_lotteryInfoCollectionView: UICollectionView = {
+    private lazy var m_cvLotteryInfo: UICollectionView = {
         let layout: UICollectionViewLayout = {
             let layout = UICollectionViewFlowLayout()
             layout.scrollDirection = .vertical
@@ -36,22 +36,22 @@ class LotteryStoresListViewController: UIViewController {
     }
     // MARK: - UI setup (Helper)
     func setupUI() {
-        view.addSubview(m_lotteryInfoCollectionView)
-        m_lotteryInfoCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(m_cvLotteryInfo)
+        m_cvLotteryInfo.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate( [
-            m_lotteryInfoCollectionView.leadingAnchor.constraint(
+            m_cvLotteryInfo.leadingAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            m_lotteryInfoCollectionView.trailingAnchor.constraint(
+            m_cvLotteryInfo.trailingAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            m_lotteryInfoCollectionView.topAnchor.constraint(
+            m_cvLotteryInfo.topAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
-            m_lotteryInfoCollectionView.bottomAnchor.constraint(
+            m_cvLotteryInfo.bottomAnchor.constraint(
                 equalTo: view.bottomAnchor)])
     }
     // MARK: configure function from ParentView
     func configureFromParent() {
         DispatchQueue.main.async {
-            self.m_lotteryInfoCollectionView.reloadData()
+            self.m_cvLotteryInfo.reloadData()
         }
     }
 }

@@ -13,74 +13,52 @@ protocol LotteryStorecvCellDelegate: AnyObject {
 }
 
 class LotteryStoreCollectionViewCell: UICollectionViewCell {
-    var location = Location(lat: 0, lon: 0)
+    private var m_location = Location(lat: 0, lon: 0)
     weak var delegate: LotteryStorecvCellDelegate?
-    var logitude: Double?
-    var latitude: Double?
-    @IBOutlet weak var lotteryName: UILabel!
-    @IBOutlet weak var lotteryDistance: UILabel!
-    @IBOutlet weak var lotteryAddress: UILabel!
-    @IBOutlet weak var lotteryNavigatonBtn: UIButton!
+    private var m_logitude: Double?
+    private var m_latitude: Double?
+    @IBOutlet weak var lbLotteryName: UILabel!
+    @IBOutlet weak var lbLotteryDistance: UILabel!
+    @IBOutlet weak var lbLotteryAddress: UILabel!
+    @IBOutlet weak var btnLotteryNavigaton: UIButton!
+    // MARK: init
     override func awakeFromNib() {
         super.awakeFromNib()
         contentView.layer.cornerRadius = 10
         if #available(iOS 15, *) {
             // not work
-            self.lotteryNavigatonBtn.configuration?.imagePlacement = .top
-            lotteryNavigatonBtn.configuration?.titleAlignment = .automatic
+            self.btnLotteryNavigaton.configuration?.imagePlacement = .top
+            btnLotteryNavigaton.configuration?.titleAlignment = .automatic
         } else {
-            lotteryNavigatonBtn.titleEdgeInsets = UIEdgeInsets(
+            btnLotteryNavigaton.titleEdgeInsets = UIEdgeInsets(
                 top: 0,
-                left: -(lotteryNavigatonBtn.imageView?.frame.size.width ?? 0),
-                bottom: -(lotteryNavigatonBtn.imageView?.frame.size.height ?? 0),
+                left: -(btnLotteryNavigaton.imageView?.frame.size.width ?? 0),
+                bottom: -(btnLotteryNavigaton.imageView?.frame.size.height ?? 0),
                 right: 0)
-            lotteryNavigatonBtn.imageEdgeInsets = UIEdgeInsets(
-                top: -(lotteryNavigatonBtn.titleLabel?.intrinsicContentSize.height ?? 0),
+            btnLotteryNavigaton.imageEdgeInsets = UIEdgeInsets(
+                top: -(btnLotteryNavigaton.titleLabel?.intrinsicContentSize.height ?? 0),
                 left: 0,
                 bottom: 0,
-                right: -(lotteryNavigatonBtn.titleLabel?.intrinsicContentSize.width ?? 0))
+                right: -(btnLotteryNavigaton.titleLabel?.intrinsicContentSize.width ?? 0))
         }
-        lotteryNavigatonBtn.layer.cornerRadius = 5
-        self.lotteryName.textColor = UIColor.init(rgb: 0xE6813C)
-        self.lotteryDistance.textColor = UIColor.init(rgb: 0xE6813C)
-        self.lotteryNavigatonBtn.backgroundColor = UIColor.init(rgb: 0xFFBC03)
- //       setbulr()
+        btnLotteryNavigaton.layer.cornerRadius = 5
+        self.lbLotteryName.textColor = UIColor.init(rgb: 0xE6813C)
+        self.lbLotteryDistance.textColor = UIColor.init(rgb: 0xE6813C)
+        self.btnLotteryNavigaton.backgroundColor = UIColor.init(rgb: 0xFFBC03)
     }
+    
     @IBAction func lotteryNavigationBtnPress(_ sender: Any) {
-        location.lon = logitude ?? 0
-        location.lat = latitude ?? 0
-        delegate?.passLocaitonInfo(location: location)
+        m_location.lon = m_logitude ?? 0
+        m_location.lat = m_latitude ?? 0
+        delegate?.passLocaitonInfo(location: m_location)
     }
+    
     func configure(lotteryName: String, lotteryAddress: String, lotteryDistance: Double, lon: Double, lat: Double) {
-        self.lotteryName.text = lotteryName
-        self.lotteryAddress.text = lotteryAddress
-        self.lotteryDistance.text = "\(lotteryDistance) 公里"
-        self.lotteryNavigatonBtn.setTitle("導航", for: .normal)
-        self.logitude = lon
-        self.latitude = lat
-    }
-    func setbulr() {
-        contentView.backgroundColor = .clear
-          let blurEffect = UIBlurEffect(style: .light)
-          let blurEffectView = UIVisualEffectView(effect: blurEffect)
-          blurEffectView.translatesAutoresizingMaskIntoConstraints = false
-          contentView.addSubview(blurEffectView)
-          blurEffectView.layer.cornerRadius = 20
-          blurEffectView.clipsToBounds = true
-          let gle = contentView.layoutMarginsGuide
-          NSLayoutConstraint.activate([
-              // constrain blur view to all 4 sides of contentView
-              blurEffectView.topAnchor.constraint(equalTo: gle.topAnchor, constant: 0.0),
-              blurEffectView.leadingAnchor.constraint(equalTo: gle.leadingAnchor, constant: 0.0),
-              blurEffectView.trailingAnchor.constraint(equalTo: gle.trailingAnchor, constant: 0.0),
-              blurEffectView.bottomAnchor.constraint(equalTo: gle.bottomAnchor, constant: 0.0)
-          ])
+        self.lbLotteryName.text = lotteryName
+        self.lbLotteryAddress.text = lotteryAddress
+        self.lbLotteryDistance.text = "\(lotteryDistance) 公里"
+        self.btnLotteryNavigaton.setTitle("導航", for: .normal)
+        self.m_logitude = lon
+        self.m_latitude = lat
     }
 }
-
-// 滑動issue
-// test 允許位置預設動作(預設位置)
-//UIalertController// 預設定位畫面
-// Life cycle // coding Style
-// ui 跑版 顏色 //  E6813C  F9B202
-// LotteryViewController

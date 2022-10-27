@@ -17,7 +17,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         let navViewController = CustomViewController(rootViewController: ParentViewController())
-//        navViewController.viewControllers = [ParentViewController()]
 
         window.rootViewController = navViewController
         self.window = window

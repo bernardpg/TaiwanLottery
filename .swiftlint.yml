@@ -1,4 +1,53 @@
+disabled_rules:
+  - function_body_length #(had)
+  - line_length #(had)
+  - force_cast #(had)
+  - identifier_name #(had)
+  - force_try #(had)
+  - shorthand_operator # (+=, -=, *=, /=)
+  - trailing_whitespace
+  - function_parameter_count
+  - nesting
+  - large_tuple
+  - file_length
+  - control_statement
+  - closure_parameter_position
+  - cyclomatic_complexity
+  - switch_case_alignment
+  - operator_whitespace
+  - implicit_getter
+  - type_body_length
+  - unneeded_break_in_switch
+  - weak_delegate
+  - class_delegate_protocol
+  - syntactic_sugar
+  - notification_center_detachment
+  - type_name
+  - inclusive_language
+  - unused_setter_value
+  - unused_closure_parameter
+
 identifier_name:
-  allowed_symbols: "_"
-  type_name:
-  allowed_symbols: "_"
+  min_length: # only min_length
+    error: 2 # only error
+    
+  excluded: # excluded via string array
+    - id
+    - URL
+    - url
+    - app
+    - nib
+    - key
+    - db
+    - i
+    - j
+
+excluded:
+  - Pods
+  - Carthage
+  - fastlane
+  - vendor
+  - .build
+  - build
+  - ModernAVPlayer
+  - SMLibrary

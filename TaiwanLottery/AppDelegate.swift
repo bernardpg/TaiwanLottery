@@ -4,9 +4,9 @@
 //
 //  Created by 1ms20p on 2022/10/17.
 //
-
+// from no to yes ok
+// from yes to no no okay
 import UIKit
-
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 

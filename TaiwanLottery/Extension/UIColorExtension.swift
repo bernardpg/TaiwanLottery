@@ -16,7 +16,6 @@ extension UIColor {
 
        self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
    }
-
    convenience init(rgb: Int) {
        self.init(
            red: (rgb >> 16) & 0xFF,
@@ -24,4 +23,7 @@ extension UIColor {
            blue: rgb & 0xFF
        )
    }
+    
+//    static let orange = UIColor.systemOrange
+//    static let lightorange = UIColor.i
 }

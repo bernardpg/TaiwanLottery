@@ -9,7 +9,7 @@ import UIKit
 
 class DropDownTableViewCell: UITableViewCell {
     static let reuseIdentifier = "\(DropDownTableViewCell.self)"
-    private lazy var titleLabel: UILabel = {
+    private lazy var m_lbTitle: UILabel = {
         let label =  UILabel()
         label.font = UIFont(name: "PingFang TC", size: 12)
         label.numberOfLines = 0
@@ -19,16 +19,15 @@ class DropDownTableViewCell: UITableViewCell {
         return label
     }()
     func configureUI(title: String) {
-        titleLabel.text = title
+        m_lbTitle.text = title
     }
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super .init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(titleLabel)
-        titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-        titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-        titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-        // Initialization code
+        contentView.addSubview(m_lbTitle)
+        m_lbTitle.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+        m_lbTitle.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        m_lbTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+        m_lbTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
     }
     required init(coder aDecoder: NSCoder) {
          fatalError("init(coder:) has not been implemented")

@@ -14,12 +14,12 @@ protocol DropDownProtocol: AnyObject {
 class DropDownBtn: UIButton, DropDownProtocol {
     func dropDownPressed(string: String) {
         self.setTitle(string, for: .normal)
-        let myNumbers = string.filter { "0123456789".contains($0) }
-        NotificationCenter.default.post(name: notificationChange, object: Double(myNumbers))
+        let kwantedDistance = string.filter { "0123456789".contains($0) }
+        NotificationCenter.default.post(name: kNotificationChange, object: Double(kwantedDistance))
         self.dismissDropDown()
     }
     var dropView = DropDownView()
-    let notificationChange = Notification.Name("changeDistance")
+    let kNotificationChange = Notification.Name("changeDistance")
     var height = NSLayoutConstraint()
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -41,7 +41,7 @@ class DropDownBtn: UIButton, DropDownProtocol {
         if isOpen == false {
             isOpen = true
             NSLayoutConstraint.deactivate([self.height])
-                self.height.constant = self.dropView.tableView.contentSize.height
+                self.height.constant = self.dropView.tvDropdown.contentSize.height
             NSLayoutConstraint.activate([self.height])
             UIView.animate( withDuration: 0.5, delay: 0,
                            usingSpringWithDamping: 0.5,
@@ -84,21 +84,21 @@ class DropDownBtn: UIButton, DropDownProtocol {
 
 class DropDownView: UIView, UITableViewDelegate, UITableViewDataSource {
     var dropDownOptions = [String]()
-    var tableView = UITableView()
+    var tvDropdown = UITableView()
     weak var delegate: DropDownProtocol?
     override init(frame: CGRect) {
         super.init(frame: frame)
-        tableView.backgroundColor = UIColor.clear
+        tvDropdown.backgroundColor = UIColor.clear
         self.backgroundColor = UIColor.clear
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(DropDownTableViewCell.self, forCellReuseIdentifier: DropDownTableViewCell.reuseIdentifier)
-        self.addSubview(tableView)
-        tableView.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
-        tableView.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
-        tableView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        tvDropdown.delegate = self
+        tvDropdown.dataSource = self
+        tvDropdown.translatesAutoresizingMaskIntoConstraints = false
+        tvDropdown.register(DropDownTableViewCell.self, forCellReuseIdentifier: DropDownTableViewCell.reuseIdentifier)
+        self.addSubview(tvDropdown)
+        tvDropdown.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
+        tvDropdown.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
+        tvDropdown.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        tvDropdown.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -120,7 +120,7 @@ class DropDownView: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.delegate?.dropDownPressed(string: dropDownOptions[indexPath.row])
-        self.tableView.deselectRow(at: indexPath, animated: true)
+        self.tvDropdown.deselectRow(at: indexPath, animated: true)
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         30
