@@ -25,21 +25,6 @@ class LotteryStoresMapViewController: UIViewController {
         let map = MKMapView()
         return map
     }()
-    private var m_kSelectedRow: Int = 0 {
-        didSet {
-            DispatchQueue.main.async {
-                let indexPath = NSIndexPath(item: self.m_kSelectedRow, section: 0)
-//                self.m_lotteryInfocv.scrollToItem(at: indexPath as IndexPath, at: .centeredHorizontally, animated: true)
-                for (index, item) in  (self.m_mapView.annotations).enumerated() {
-                    if  index == self.m_kSelectedRow {
-                        print(index)
-                        print(item.coordinate)
-                        self.m_mapView.selectAnnotation(item, animated: true)
-                    }
-                }
-            }
-        }
-    }
     weak var mapLotteryListDatasource: LotteryListDatasource?
     weak var navigationLocaitonDelegate: PassoutNavigationDelegate?
     private var m_routeCoordinates: [CLLocation] = []
@@ -184,12 +169,12 @@ extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDe
         self.m_mapView.removeAnnotations(allAnnotaitons)
         if m_routeCoordinates.count != 0 {
             for (index, location) in m_routeCoordinates.enumerated() {
-                let lotteriesPin = CustomPointAnnotation()
+                let lotteriesPin = LotteryPointAnnotation()
                 lotteriesPin.coordinate = CLLocationCoordinate2D(
                     latitude: location.coordinate.latitude,
                     longitude: location.coordinate.longitude)
-                print(lotteriesPin.coordinate.latitude)
                 lotteriesPin.lotteryId = index
+                lotteriesPin.isselected = false
                 m_mapView.addAnnotation(lotteriesPin)
             }
         }
@@ -216,20 +201,11 @@ extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDe
         mapView.setRegion(region, animated: true)
         view.image = UIImage(named: "mapPinOn")
         guard let listLottery =  mapLotteryListDatasource?.passDataFromParent() else { return }
-/*        for annotationsItem in m_mapView.annotations {
-            if annotationsItem.coordinate.latitude ==
-                listLottery[indexPath.row].lat {
-                self.m_mapView.selectAnnotation(annotationsItem, animated: true)
-            }
-        }
-*/
         for (index, item) in listLottery.enumerated() {
             guard let lat = view.annotation?.coordinate.latitude else { return }
             guard let lon = view.annotation?.coordinate.longitude else { return }
-            print(lat, lon)
             if item.lon == lon && item.lat == lat {
                 let path = IndexPath(item: index, section: 0)
-                print(index)
                 m_cvLotteryInfo.scrollToItem(at: path, at: .centeredHorizontally, animated: true)
             }
         }
@@ -242,24 +218,63 @@ extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDe
 // MARK: - CollectionView FlowLayout
 
 extension LotteryStoresMapViewController: UICollectionViewDelegateFlowLayout, UIScrollViewDelegate {
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        
+    func scrollViewWillEndDragging(
+        _ scrollView: UIScrollView,
+        withVelocity velocity: CGPoint,
+        targetContentOffset: UnsafeMutablePointer<CGPoint>) {
             guard let layout = m_cvLotteryInfo.collectionViewLayout as? UICollectionViewFlowLayout else { return   }
             let cellWidthIncludingSpacing = layout.itemSize.width + layout.minimumLineSpacing // Calculate cell size
-            
             let offset = scrollView.contentOffset.x
-            let index = (offset + scrollView.contentInset.left) / cellWidthIncludingSpacing // Calculate the cell need to be center
-
+            let index = (offset + scrollView.contentInset.left) / cellWidthIncludingSpacing
+            // Calculate the cell need to be center
+            print(index)
+            var unselectedindex: Int?
             if velocity.x > 0 { // Scroll to -->
-                targetContentOffset.pointee = CGPoint(x: ceil(index) * cellWidthIncludingSpacing - scrollView.contentInset.right, y: -scrollView.contentInset.top)
+                targetContentOffset.pointee = CGPoint(
+                    x: ceil(index) * cellWidthIncludingSpacing - scrollView.contentInset.right,
+                    y: -scrollView.contentInset.top)
+                unselectedindex = Int(ceil(index)) - 1
+                pointAnnotation(selectedIndex: index)
             } else if velocity.x < 0 { // Scroll to <---
-                targetContentOffset.pointee = CGPoint(x: floor(index) * cellWidthIncludingSpacing - scrollView.contentInset.left, y: -scrollView.contentInset.top)
+                targetContentOffset.pointee = CGPoint(
+                    x: floor(index) * cellWidthIncludingSpacing - scrollView.contentInset.left,
+                    y: -scrollView.contentInset.top)
+                unselectedindex = Int(floor(index)) + 1
+                pointAnnotation(selectedIndex: index)
             } else if velocity.x == 0 { // No dragging
-                targetContentOffset.pointee = CGPoint(x: round(index) * cellWidthIncludingSpacing - scrollView.contentInset.left, y: -scrollView.contentInset.top)
+                print(floor(index))
+                print(round(index))
+                targetContentOffset.pointee = CGPoint(
+                    x: round(index) * cellWidthIncludingSpacing - scrollView.contentInset.left,
+                    y: -scrollView.contentInset.top)
+                unselectedindex = Int(round(index))
+                pointAnnotation(selectedIndex: index)
             }
         }
-}
+    func pointAnnotation(selectedIndex: Double) {
+        let selectedLocation = CLLocationCoordinate2D(
+            latitude: m_routeCoordinates[Int(selectedIndex)].coordinate.latitude,
+            longitude: m_routeCoordinates[Int(selectedIndex)].coordinate.longitude)
+        DispatchQueue.main.async {
+            self.updateMapAnotationPin(vIndex: Int(selectedIndex))
+        }
+        m_mapView.setRegion(MKCoordinateRegion(center: selectedLocation, latitudinalMeters: 1000, longitudinalMeters: 1000), animated: true)
+    }
+    func updateMapAnotationPin(vIndex: Int) {
+        if self.m_mapView.annotations.count != 0 {
+            let info = self.m_mapView.annotations[vIndex]
+//            self.m_mapView.ann
+            let aView = m_mapView.view(for: info)// .viewForAnnotation(info)
+//            info.imageName = "ic_map_pin1"
+//            info.tagPin = vIndex
+            aView?.image = UIImage(named: "mapPinOn")
 
+/*            if aView != nil {
+                self.animationWithView(aView!)
+            }*/
+        }
+    }
+}
 // MARK: - CollectionViewDelegate
 extension LotteryStoresMapViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -290,7 +305,7 @@ extension LotteryStoresMapViewController: UICollectionViewDataSource {
                 else { return UICollectionViewCell()  }
             guard let listLottery =  mapLotteryListDatasource?.passDataFromParent()
                 else { return UICollectionViewCell() }
-            cell.layer.cornerRadius = 5
+            cell.layer.cornerRadius = 10
             cell.delegate = self
             cell.configure(
             lotteryName: listLottery[indexPath.row].name,
@@ -311,6 +326,53 @@ extension LotteryStoresMapViewController: LotteryStorecvCellDelegate {
     }
 }
 
-class CustomPointAnnotation: MKPointAnnotation {
+class LotteryPointAnnotation: MKPointAnnotation {
     var lotteryId: Int?
+    var isselected: Bool?
+}
+enum MapSelectedType: Int {
+  case selected
+  case unselected
+  func image() -> UIImage {
+    switch self {
+    case .selected:
+      return  UIImage(named: "mapPinOn")!
+    case .unselected:
+      return  UIImage(named: "mapPinOff")!
+    }
+  }
+}
+class LotteryMKAnnotation: NSObject, MKAnnotation {
+    let coordinate: CLLocationCoordinate2D
+    let title: String?
+    let subtitle: String?
+    let type: MapSelectedType
+    // 4
+    init(
+      coordinate: CLLocationCoordinate2D,
+      title: String,
+      subtitle: String,
+      type: MapSelectedType
+    ) {
+      self.coordinate = coordinate
+      self.title = title
+      self.subtitle = subtitle
+      self.type = type
+    }
+}
+class LotteryAnnotationView: MKAnnotationView {
+  // 1
+  // Required for MKAnnotationView
+  required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+  }
+  // 2
+  override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
+    super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+    guard
+      let lotteryAnnotation = self.annotation as? LotteryMKAnnotation else {
+        return
+    }
+    image = lotteryAnnotation.type.image()
+  }
 }
