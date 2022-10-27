@@ -36,7 +36,7 @@ class ParentViewController: UIViewController {
     }()
     private var m_locationManager: CLLocationManager = CLLocationManager()
     private var m_currentLocation: CLLocation?
-    var authorizationStatus: CLAuthorizationStatus?
+    var m_authorizationStatus: CLAuthorizationStatus?
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,11 +49,11 @@ class ParentViewController: UIViewController {
         // location manager
         m_locationManager.delegate = self
         if #available(iOS 14, *) {
-            authorizationStatus = m_locationManager.authorizationStatus
+            m_authorizationStatus = m_locationManager.authorizationStatus
         } else {
-            authorizationStatus = m_locationManager.authorizationStatus
+            m_authorizationStatus = m_locationManager.authorizationStatus
         }
-        switch authorizationStatus {
+        switch m_authorizationStatus {
         case .notDetermined:
             m_locationManager.requestWhenInUseAuthorization()
             m_locationManager.desiredAccuracy = kCLLocationAccuracyBest
