@@ -47,8 +47,7 @@
                             <color key="titleColor" systemColor="systemBackgroundColor"/>
                         </state>
                         <buttonConfiguration key="configuration" style="filled" image="iconDirection" title="導航">
-                            <color key="baseForegroundColor" systemColor="systemBackgroundColor"/>
-                            <color key="baseBackgroundColor" systemColor="systemOrangeColor"/>
+                            <color key="baseBackgroundColor" red="0.95125467443418976" green="0.75853005498877712" blue="0.31217873419611508" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         </buttonConfiguration>
                         <connections>
                             <action selector="lotteryNavigationBtnPress:" destination="gTV-IL-0wX" eventType="touchUpInside" id="8ax-wT-PeH"/>

@@ -16,12 +16,11 @@ class LotteryStoresListViewController: UIViewController {
             layout.scrollDirection = .vertical
             return layout
         }()
-        let rect = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50)
-        let collection = UICollectionView(frame: rect, collectionViewLayout: layout)
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.register(
             UINib(nibName: "LotteryStoreCollectionViewCell", bundle: nil),
             forCellWithReuseIdentifier: "LotteryStoreCollectionViewCell")
-        collection.backgroundColor = .white
+        collection.backgroundColor = UIColor(red: 234, green: 234, blue: 234)
         collection.delegate = self
         collection.dataSource = self
         collection.showsHorizontalScrollIndicator = false
@@ -76,6 +75,7 @@ extension LotteryStoresListViewController: UICollectionViewDataSource {
                 withReuseIdentifier: "LotteryStoreCollectionViewCell",
                 for: indexPath) as? LotteryStoreCollectionViewCell else { return UICollectionViewCell()  }
             guard let listLottery =  lotteryListDatasource?.passDataFromParent() else { return UICollectionViewCell() }
+            cell.backgroundColor = .white
             cell.delegate = self
             cell.layer.cornerRadius = 5
             cell.configure(

@@ -33,9 +33,9 @@ class LotteryStoresMapViewController: UIViewController {
             let layout = UICollectionViewFlowLayout()
             layout.scrollDirection = .horizontal
             layout.minimumLineSpacing = 10
-            layout.sectionInset = UIEdgeInsets(top: 0, left: 35, bottom: 0, right: 35)
-            let itemWidth = UIScreen.main.bounds.width - (35 * 2)
-            layout.itemSize = CGSize(width: itemWidth, height: 90)
+            layout.sectionInset = UIEdgeInsets(top: 0, left: 25, bottom: 0, right: 25)
+            let itemWidth = UIScreen.main.bounds.width - (25 * 2)
+            layout.itemSize = CGSize(width: itemWidth, height: 80)
             return layout
         }()
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -115,10 +115,8 @@ class LotteryStoresMapViewController: UIViewController {
         // Add Button to the View Controller
         self.view.addSubview(button)
         // button Constraints
-        button.centerXAnchor.constraint(equalTo: self.view.centerXAnchor,
-            constant: 140).isActive = true
-        button.centerYAnchor.constraint(equalTo: self.view.centerYAnchor,
-            constant: -UIScreen.main.bounds.width + 100 ).isActive = true
+        button.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 14).isActive = true
+        button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -14).isActive = true
         button.layer.cornerRadius = 5
         button.widthAnchor.constraint(equalToConstant: 50).isActive = true
         button.heightAnchor.constraint(equalToConstant: 25).isActive = true
@@ -182,7 +180,6 @@ extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDe
          return annotationView
     }
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        // Annotationview ID 去判斷
         let region = MKCoordinateRegion(
             center: view.annotation!.coordinate,
             latitudinalMeters: 500,
@@ -212,23 +209,28 @@ extension LotteryStoresMapViewController: UICollectionViewDelegateFlowLayout, UI
         withVelocity velocity: CGPoint,
         targetContentOffset: UnsafeMutablePointer<CGPoint>) {
             guard let layout = m_cvLotteryInfo.collectionViewLayout as? UICollectionViewFlowLayout else { return   }
+            guard let listLottery =  mapLotteryListDatasource?.passDataFromParent() else { return }
             let cellWidthIncludingSpacing = layout.itemSize.width + layout.minimumLineSpacing // Calculate cell size
             let offset = scrollView.contentOffset.x
-            let index = (offset + scrollView.contentInset.left) / cellWidthIncludingSpacing
+            var index = (offset + scrollView.contentInset.left) / cellWidthIncludingSpacing
             // Calculate the cell need to be center
             if velocity.x > 0 { // Scroll to -->
                 targetContentOffset.pointee = CGPoint(
                     x: ceil(index) * cellWidthIncludingSpacing - scrollView.contentInset.right,
                     y: -scrollView.contentInset.top)
+                if Int(ceil(index)) >= listLottery.count {
+                    index = CGFloat(listLottery.count - 1)
+                }
                 pointAnnotation(selectedIndex: ceil(index))
             } else if velocity.x < 0 { // Scroll to <---
                 targetContentOffset.pointee = CGPoint(
                     x: floor(index) * cellWidthIncludingSpacing - scrollView.contentInset.left,
                     y: -scrollView.contentInset.top)
+                if index < 0 {
+                    index  = CGFloat(0.0)
+                }
                 pointAnnotation(selectedIndex: floor(index))
             } else if velocity.x == 0 { // No dragging
-                print(floor(index))
-                print(round(index))
                 targetContentOffset.pointee = CGPoint(
                     x: round(index) * cellWidthIncludingSpacing - scrollView.contentInset.left,
                     y: -scrollView.contentInset.top)
@@ -300,18 +302,12 @@ extension LotteryStoresMapViewController: UICollectionViewDataSource {
 }
 
 // MARK: - LotteryStorecvCellDelegate Navigation
-// StoreMapViewController 
 extension LotteryStoresMapViewController: LotteryStorecvCellDelegate {
     func passLocaitonInfo(location: Location) {
         let targetLocation = CLLocationCoordinate2D(latitude: location.lat, longitude: location.lon)
         navigationLocaitonDelegate?.requestNavigation(location: targetLocation)
     }
 }
-
-/*class LotteryPointAnnotation: MKPointAnnotation {
-    var lotteryId: Int?
-    var isselected: Bool?
-}*/
 enum MapSelectedType: Int {
   case selected = 0
   case unselected
@@ -329,7 +325,6 @@ class LotteryMKAnnotation: NSObject, MKAnnotation {
     let type: MapSelectedType
     let index: Int
     let title: String?
-    // 4
     init(
       coordinate: CLLocationCoordinate2D,
       type: MapSelectedType,
@@ -343,12 +338,9 @@ class LotteryMKAnnotation: NSObject, MKAnnotation {
     }
 }
 class LotteryAnnotationView: MKAnnotationView {
-  // 1
-  // Required for MKAnnotationView
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
   }
-  // 2
   override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
     super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
     guard

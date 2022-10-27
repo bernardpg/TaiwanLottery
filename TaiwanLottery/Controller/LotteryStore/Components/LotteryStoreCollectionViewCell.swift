@@ -43,7 +43,8 @@ class LotteryStoreCollectionViewCell: UICollectionViewCell {
         lotteryNavigatonBtn.layer.cornerRadius = 5
         self.lotteryName.textColor = UIColor.init(rgb: 0xE6813C)
         self.lotteryDistance.textColor = UIColor.init(rgb: 0xE6813C)
-        self.lotteryNavigatonBtn.backgroundColor = UIColor.init(rgb: 0xF9B202)
+        self.lotteryNavigatonBtn.backgroundColor = UIColor.init(rgb: 0xFFBC03)
+ //       setbulr()
     }
     @IBAction func lotteryNavigationBtnPress(_ sender: Any) {
         location.lon = logitude ?? 0
@@ -58,15 +59,28 @@ class LotteryStoreCollectionViewCell: UICollectionViewCell {
         self.logitude = lon
         self.latitude = lat
     }
+    func setbulr() {
+        contentView.backgroundColor = .clear
+          let blurEffect = UIBlurEffect(style: .light)
+          let blurEffectView = UIVisualEffectView(effect: blurEffect)
+          blurEffectView.translatesAutoresizingMaskIntoConstraints = false
+          contentView.addSubview(blurEffectView)
+          blurEffectView.layer.cornerRadius = 20
+          blurEffectView.clipsToBounds = true
+          let gle = contentView.layoutMarginsGuide
+          NSLayoutConstraint.activate([
+              // constrain blur view to all 4 sides of contentView
+              blurEffectView.topAnchor.constraint(equalTo: gle.topAnchor, constant: 0.0),
+              blurEffectView.leadingAnchor.constraint(equalTo: gle.leadingAnchor, constant: 0.0),
+              blurEffectView.trailingAnchor.constraint(equalTo: gle.trailingAnchor, constant: 0.0),
+              blurEffectView.bottomAnchor.constraint(equalTo: gle.bottomAnchor, constant: 0.0)
+          ])
+    }
 }
 
-// 滑動issue // test 允許位置預設動作(預設位置) UIalertController// 預設定位畫面
+// 滑動issue
+// test 允許位置預設動作(預設位置)
+//UIalertController// 預設定位畫面
 // Life cycle // coding Style
 // ui 跑版 顏色 //  E6813C  F9B202
-//  字串 define  ＵＲＬ static // tldefine
-
-// 殘餘cod // unselected  selected and title
-// 傳 log lat
-
-// Codind Style function m_
 // LotteryViewController
