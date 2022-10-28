@@ -42,9 +42,10 @@ class LotteryStoreCollectionViewCell: UICollectionViewCell {
                 right: -(btnLotteryNavigaton.titleLabel?.intrinsicContentSize.width ?? 0))
         }
         btnLotteryNavigaton.layer.cornerRadius = 5
-        self.lbLotteryName.textColor = UIColor.init(rgb: 0xE6813C)
-        self.lbLotteryDistance.textColor = UIColor.init(rgb: 0xE6813C)
-        self.btnLotteryNavigaton.backgroundColor = UIColor.init(rgb: 0xFFBC03)
+        btnLotteryNavigaton.setImage(UIImage.iconDirection, for: .normal)
+        self.lbLotteryName.textColor = UIColor.darkOrangeColor
+        self.lbLotteryDistance.textColor = UIColor.darkOrangeColor
+        self.btnLotteryNavigaton.backgroundColor = UIColor.lightOrangeColor
     }
     
     @IBAction func lotteryNavigationBtnPress(_ sender: Any) {

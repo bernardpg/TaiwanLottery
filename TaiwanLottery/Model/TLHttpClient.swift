@@ -12,11 +12,12 @@ enum NetworkErrorConditions: Error {
     case dataCannotHandled
 }
 // Singletion
-class HttpClient {
-    static let shared = HttpClient()
-//    (Result<CreateUserResponse, Error>) -> Void)
-    func postAPILottery(url: URL, lat: Double,
-                        lon: Double, distance: Double,
+class TLHttpClient {
+    static let shared = TLHttpClient()
+    func postAPILottery(url: URL,
+                        lat: Double,
+                        lon: Double,
+                        distance: Double,
                         completion: @escaping(Result<CreateUserResponse, NetworkErrorConditions>) -> Void) {
         // response 多型 generic
         var request = URLRequest(url: url)

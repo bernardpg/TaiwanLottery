@@ -8,23 +8,31 @@
 import UIKit
 import MapKit
 import CoreLocation
-// pop datasource // return true number
-protocol LotteryListDatasource: AnyObject {
+
+protocol LotteryListDataSource: AnyObject {
     func passDataFromParent() -> [LotteryInfo]
 }
 
 class ParentViewController: UIViewController {
     private var m_changeDistance = 1.0 {
-        didSet {
-            getAPIData(
-                latitude: m_currentLocation?.coordinate.latitude ?? 0,
-                longtitude: m_currentLocation?.coordinate.longitude ?? 0,
-                distance: m_changeDistance)
+        didSet { 
+            if m_defaultLocation != nil {
+                getAPIData(
+                    latitude: m_defaultLocation?.coordinate.latitude ?? 0,
+                    longtitude: m_defaultLocation?.coordinate.longitude ?? 0,
+                    distance: m_changeDistance)
+            } else if m_currentLocation != nil { getAPIData(
+                    latitude: m_currentLocation?.coordinate.latitude ?? 0,
+                    longtitude: m_currentLocation?.coordinate.longitude ?? 0,
+                    distance: m_changeDistance)
+            }
         }
     }
+    
     private var m_listLotteriesInfo = [LotteryInfo]()// LotteryStores(list: [])
     // MARK: - Property
     private lazy var m_vcMapView = LotteryStoresMapViewController()
+    
     let url = URL(string: "https://smuat.megatime.com.tw/taiwanlottery/api/Home/Station")!
     private lazy var m_vcLotteryStoreList = LotteryStoresListViewController()
     private lazy var m_btnChange: UIBarButtonItem = {
@@ -36,6 +44,7 @@ class ParentViewController: UIViewController {
     }()
     private var m_locationManager: CLLocationManager = CLLocationManager()
     private var m_currentLocation: CLLocation?
+    private var m_defaultLocation: CLLocation?
     var authorizationStatus: CLAuthorizationStatus?
     // MARK: - View Life Cycle
     override func viewDidLoad() {
@@ -60,8 +69,6 @@ class ParentViewController: UIViewController {
             m_locationManager.distanceFilter = kCLHeadingFilterNone
             m_locationManager.requestWhenInUseAuthorization()
             m_locationManager.startUpdatingLocation()
-//            m_locationManager.stopUpdatingLocation()
-// First time lanch app need to get authorize from user
           fallthrough
         case .authorizedWhenInUse:
             m_locationManager.requestWhenInUseAuthorization()
@@ -69,12 +76,11 @@ class ParentViewController: UIViewController {
             m_locationManager.distanceFilter = kCLHeadingFilterNone
             m_locationManager.requestWhenInUseAuthorization()
             m_locationManager.startUpdatingLocation()
-//            m_locationManager.stopUpdatingLocation()
         case .denied:
-            m_currentLocation = CLLocation(latitude: 25.0338, longitude: 121.5647)
+            m_defaultLocation = CLLocation(latitude: 25.0338, longitude: 121.5647)
             getAPIData(
-                latitude: m_currentLocation?.coordinate.latitude ?? 0,
-                longtitude: m_currentLocation?.coordinate.longitude ?? 0, distance: 1)
+                latitude: m_defaultLocation?.coordinate.latitude ?? 0,
+                longtitude: m_defaultLocation?.coordinate.longitude ?? 0, distance: 1)
           let alertController = UIAlertController(
             title: "定位權限已關閉",
             message: "如要變更權限，請至 設定 > 隱私權 > 定位服務 開啟",
@@ -99,14 +105,14 @@ class ParentViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print(m_locationManager.authorizationStatus)
-        locationManagerDidChangeAuthorization(m_locationManager)
+//        locationManagerDidChangeAuthorization(m_locationManager)
     }
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
     // MARK: navigationsetting
     private func setupNavgation() {
-        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.init(rgb: 0xE6813C)]
+        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.darkOrangeColor]
         self.navigationItem.title = "附近投注站"
         let barButtomItem = m_btnChange
         self.navigationItem.setRightBarButton(barButtomItem, animated: true)
@@ -175,21 +181,23 @@ extension ParentViewController: CLLocationManagerDelegate {
                     latitude: userLocation.coordinate.latitude,
                     longtitude: userLocation.coordinate.longitude,
                     distance: 1)
+                self.m_locationManager.stopUpdatingLocation()
             }
+        } else {
         }
     }
     // MARK: ParentVC to MapVC and ListVC
     func getAPIData(latitude: CLLocationDegrees,
                     longtitude: CLLocationDegrees,
                     distance: Double) {
-        HttpClient.shared.postAPILottery(
+        TLHttpClient.shared.postAPILottery(
             url: url, lat: latitude, lon: longtitude,
             distance: distance) { [weak self] result in
                 switch result {
                 case .success(let decodedData):
-                    self?.m_listLotteriesInfo = decodedData.content.list.sorted(by: { $0.distance < $1.distance })
-                    self?.m_vcMapView.configureFromParent()
-                    self?.m_vcLotteryStoreList.configureFromParent()
+                        self?.m_listLotteriesInfo = decodedData.content.list.sorted(by: { $0.distance < $1.distance })
+                        self?.m_vcMapView.configureFromParent()
+                        self?.m_vcLotteryStoreList.configureFromParent()
                 case .failure:
                     print("Decode error")
                 }
@@ -210,19 +218,19 @@ extension ParentViewController: CLLocationManagerDelegate {
             manager.startUpdatingLocation()
           fallthrough
         case .authorizedWhenInUse:
+            m_defaultLocation = nil
+            m_currentLocation = nil
             manager.requestWhenInUseAuthorization()
             manager.desiredAccuracy = kCLLocationAccuracyBest
             manager.distanceFilter = kCLHeadingFilterNone
             manager.requestWhenInUseAuthorization()
             manager.startUpdatingLocation()
-
         case .denied:
-            m_currentLocation = CLLocation(latitude: 25.0338, longitude: 121.5647)
-//            let viewRegion = MKCoordinateRegion(
-//                center: m_currentLocation?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0),
-//                latitudinalMeters: 1500,
-//                longitudinalMeters: 1500)
-////            m_vMap.setRegion(viewRegion, animated: false)
+            m_currentLocation = nil
+            m_defaultLocation = CLLocation(latitude: 25.0338, longitude: 121.5647)
+            getAPIData(
+                latitude: m_defaultLocation?.coordinate.latitude ?? 0,
+                longtitude: m_defaultLocation?.coordinate.longitude ?? 0, distance: 1)
           let alertController = UIAlertController(
             title: "定位權限已關閉",
             message: "如要變更權限，請至 設定 > 隱私權 > 定位服務 開啟",
@@ -234,7 +242,7 @@ extension ParentViewController: CLLocationManagerDelegate {
           break }
     }
 }
-extension ParentViewController: LotteryListDatasource {
+extension ParentViewController: LotteryListDataSource {
     func passDataFromParent() -> [LotteryInfo] {
         return self.m_listLotteriesInfo
     }

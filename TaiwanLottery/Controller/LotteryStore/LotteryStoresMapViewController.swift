@@ -25,7 +25,7 @@ class LotteryStoresMapViewController: UIViewController {
         let map = MKMapView()
         return map
     }()
-    weak var mapLotteryListDatasource: LotteryListDatasource?
+    weak var mapLotteryListDatasource: LotteryListDataSource?
     weak var navigationLocaitonDelegate: PassoutNavigationDelegate?
     private var m_routeCoordinates: [CLLocation] = []
     private lazy var m_cvLotteryInfo: UICollectionView = {
@@ -49,6 +49,7 @@ class LotteryStoresMapViewController: UIViewController {
     let url = URL(string: "https://smuat.megatime.com.tw/taiwanlottery/api/Home/Station")!
     private var m_locationManager: CLLocationManager = CLLocationManager()
     private var m_currentLocation: CLLocation?
+    private var m_defaultLocation: CLLocation?
     var authorizationStatus: CLAuthorizationStatus?
     // MARK: - View Life Cycle
     override func viewDidLoad() {
@@ -78,9 +79,8 @@ class LotteryStoresMapViewController: UIViewController {
             m_locationManager.distanceFilter = kCLHeadingFilterNone
             m_locationManager.requestWhenInUseAuthorization()
             m_locationManager.startUpdatingLocation()
-
         case .denied:
-            m_currentLocation = CLLocation(latitude: 25.0338, longitude: 121.5647)
+            m_defaultLocation = CLLocation(latitude: 25.0338, longitude: 121.5647)
             let viewRegion = MKCoordinateRegion(
                 center: m_currentLocation?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0),
                 latitudinalMeters: 1500,
@@ -95,14 +95,9 @@ class LotteryStoresMapViewController: UIViewController {
           self.present(alertController, animated: true, completion: nil)
         default:
           break }
+        
         setupUI()
     }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        print(m_locationManager.authorizationStatus)
-        locationManagerDidChangeAuthorization(m_locationManager)
-    }
-
     // MARK: UI setup (Helper)
     private func setupUI() {
         view.addSubview(m_vMap)
@@ -137,9 +132,9 @@ class LotteryStoresMapViewController: UIViewController {
     // MARK: configure function from ParentView
     func configureFromParent() {
         DispatchQueue.main.async {
-                    self.updateCoordinate()
-                    self.addPins()
-                    self.m_cvLotteryInfo.reloadData()
+            self.updateCoordinate()
+            self.addPins()
+            self.m_cvLotteryInfo.reloadData()
         }
     }
 }
@@ -159,13 +154,15 @@ extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDe
                 m_vMap.setRegion(viewRegion, animated: false)
             }
         } else {
-            let viewRegion = MKCoordinateRegion(
-                center: m_currentLocation?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0),
-                latitudinalMeters: 1500,
-                longitudinalMeters: 1500)
-            m_vMap.setRegion(viewRegion, animated: false)
-
+            if let userLocation = locations.last {
+                let viewRegion = MKCoordinateRegion(
+                    center: userLocation.coordinate,
+                    latitudinalMeters: 1500,
+                    longitudinalMeters: 1500)
+                m_vMap.setRegion(viewRegion, animated: false)
+            }
         }
+        self.m_locationManager.stopUpdatingLocation()
     }
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         if #available(iOS 14, *) {
@@ -182,6 +179,7 @@ extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDe
             manager.startUpdatingLocation()
           fallthrough
         case .authorizedWhenInUse:
+            btnDropdown.setTitle(" 1 公里", for: .normal)
             manager.requestWhenInUseAuthorization()
             manager.desiredAccuracy = kCLLocationAccuracyBest
             manager.distanceFilter = kCLHeadingFilterNone
@@ -189,9 +187,10 @@ extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDe
             manager.startUpdatingLocation()
 
         case .denied:
-            m_currentLocation = CLLocation(latitude: 25.0338, longitude: 121.5647)
+            btnDropdown.setTitle(" 1 公里", for: .normal)
+            m_defaultLocation = CLLocation(latitude: 25.0338, longitude: 121.5647)
             let viewRegion = MKCoordinateRegion(
-                center: m_currentLocation?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0),
+                center: m_defaultLocation?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0),
                 latitudinalMeters: 1500,
                 longitudinalMeters: 1500)
             m_vMap.setRegion(viewRegion, animated: false)
@@ -243,7 +242,7 @@ extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDe
             latitudinalMeters: 500,
             longitudinalMeters: 500)
         mapView.setRegion(region, animated: true)
-        view.image = UIImage(named: "mapPinOn")
+        view.image = UIImage.mapPinOn
         guard let listLottery =  mapLotteryListDatasource?.passDataFromParent() else { return }
         for (index, item) in listLottery.enumerated() {
             guard let lat = view.annotation?.coordinate.latitude else { return }
@@ -255,7 +254,7 @@ extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDe
         }
     }
     func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
-        view.image = UIImage(named: "mapPinOff")
+        view.image = UIImage.mapPinOff
     }
 }
 
@@ -360,28 +359,30 @@ extension LotteryStoresMapViewController: LotteryStorecvCellDelegate {
         navigationLocaitonDelegate?.requestNavigation(location: targetLocation)
     }
 }
+
 enum MapSelectedType: Int {
-  case selected = 0
-  case unselected
-  func image() -> UIImage {
-    switch self {
-    case .selected:
-      return  UIImage(named: "mapPinOn")!
-    case .unselected:
-      return  UIImage(named: "mapPinOff")!
+    case selected = 0
+    case unselected
+    func image() -> UIImage {
+        switch self {
+        case .selected:
+            return UIImage.mapPinOn
+        case .unselected:
+            return UIImage.mapPinOff
+        }
     }
-  }
 }
+
 class LotteryMKAnnotation: NSObject, MKAnnotation {
     let coordinate: CLLocationCoordinate2D
     let type: MapSelectedType
     let index: Int
     let title: String?
     init(
-      coordinate: CLLocationCoordinate2D,
-      type: MapSelectedType,
-      index: Int,
-      title: String
+        coordinate: CLLocationCoordinate2D,
+        type: MapSelectedType,
+        index: Int,
+        title: String
     ) {
         self.coordinate = coordinate
         self.type = type
@@ -389,16 +390,17 @@ class LotteryMKAnnotation: NSObject, MKAnnotation {
         self.title = title
     }
 }
+
 class LotteryAnnotationView: MKAnnotationView {
-  required init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
-  }
-  override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
-    super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
-    guard
-      let lotteryAnnotation = self.annotation as? LotteryMKAnnotation else {
-        return
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
-    image = lotteryAnnotation.type.image()
-  }
+    override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
+        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+        guard
+            let lotteryAnnotation = self.annotation as? LotteryMKAnnotation else {
+            return
+        }
+        image = lotteryAnnotation.type.image()
+    }
 }

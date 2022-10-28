@@ -26,7 +26,7 @@ class LotteryStoresListViewController: UIViewController {
         collection.showsHorizontalScrollIndicator = false
         return collection
     }()
-    weak var lotteryListDatasource: LotteryListDatasource?
+    weak var lotteryListDatasource: LotteryListDataSource?
     weak var navigationLocaitonDelegate: PassoutNavigationDelegate?
 // MARK: View Life Cycle
 

@@ -13,7 +13,7 @@ class DropDownTableViewCell: UITableViewCell {
         let label =  UILabel()
         label.font = UIFont(name: "PingFang TC", size: 12)
         label.numberOfLines = 0
-        label.textColor = UIColor.init(rgb: 0xE6813C)
+        label.textColor = UIColor.darkOrangeColor
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
         return label

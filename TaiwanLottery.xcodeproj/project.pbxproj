@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6355BF32290BAD8000AA9830 /* TLDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6355BF31290BAD8000AA9830 /* TLDefine.swift */; };
 		637279D228FD4DC3009A2500 /* LotteoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637279D128FD4DC3009A2500 /* LotteoryModel.swift */; };
-		637279D428FD4F6D009A2500 /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637279D328FD4F6D009A2500 /* HttpClient.swift */; };
+		637279D428FD4F6D009A2500 /* TLHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637279D328FD4F6D009A2500 /* TLHttpClient.swift */; };
 		637279DB28FE56F0009A2500 /* LotteryStoresListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637279DA28FE56F0009A2500 /* LotteryStoresListViewController.swift */; };
 		637279DE28FE5CE7009A2500 /* LotteryStoreCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637279DC28FE5CE7009A2500 /* LotteryStoreCollectionViewCell.swift */; };
 		637279DF28FE5CE7009A2500 /* LotteryStoreCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 637279DD28FE5CE7009A2500 /* LotteryStoreCollectionViewCell.xib */; };
@@ -16,8 +17,7 @@
 		63828828290130CA00F38246 /* CustomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63828827290130CA00F38246 /* CustomViewController.swift */; };
 		6382882A29014AF100F38246 /* DropDownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6382882929014AF100F38246 /* DropDownButton.swift */; };
 		6382882C290151A200F38246 /* DropDownTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6382882B290151A200F38246 /* DropDownTableViewCell.swift */; };
-		6387F838290785F60034346E /* UIExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6387F837290785F60034346E /* UIExtension.swift */; };
-		6387F83A290786260034346E /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6387F839290786260034346E /* UIColorExtension.swift */; };
+		6387F838290785F60034346E /* UIApplicationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6387F837290785F60034346E /* UIApplicationExtension.swift */; };
 		63D4475028FD3AC4005251F1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D4474F28FD3AC4005251F1 /* AppDelegate.swift */; };
 		63D4475228FD3AC4005251F1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D4475128FD3AC4005251F1 /* SceneDelegate.swift */; };
 		63D4475428FD3AC4005251F1 /* LotteryStoresMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D4475328FD3AC4005251F1 /* LotteryStoresMapViewController.swift */; };
@@ -28,8 +28,9 @@
 
 /* Begin PBXFileReference section */
 		3F87408D736DCCDB2E497A95 /* Pods-TaiwanLottery.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaiwanLottery.release.xcconfig"; path = "Target Support Files/Pods-TaiwanLottery/Pods-TaiwanLottery.release.xcconfig"; sourceTree = "<group>"; };
+		6355BF31290BAD8000AA9830 /* TLDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLDefine.swift; sourceTree = "<group>"; };
 		637279D128FD4DC3009A2500 /* LotteoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LotteoryModel.swift; sourceTree = "<group>"; };
-		637279D328FD4F6D009A2500 /* HttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
+		637279D328FD4F6D009A2500 /* TLHttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLHttpClient.swift; sourceTree = "<group>"; };
 		637279DA28FE56F0009A2500 /* LotteryStoresListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LotteryStoresListViewController.swift; sourceTree = "<group>"; };
 		637279DC28FE5CE7009A2500 /* LotteryStoreCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LotteryStoreCollectionViewCell.swift; sourceTree = "<group>"; };
 		637279DD28FE5CE7009A2500 /* LotteryStoreCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LotteryStoreCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -37,8 +38,7 @@
 		63828827290130CA00F38246 /* CustomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViewController.swift; sourceTree = "<group>"; };
 		6382882929014AF100F38246 /* DropDownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownButton.swift; sourceTree = "<group>"; };
 		6382882B290151A200F38246 /* DropDownTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownTableViewCell.swift; sourceTree = "<group>"; };
-		6387F837290785F60034346E /* UIExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIExtension.swift; sourceTree = "<group>"; };
-		6387F839290786260034346E /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
+		6387F837290785F60034346E /* UIApplicationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationExtension.swift; sourceTree = "<group>"; };
 		63D4474C28FD3AC4005251F1 /* TaiwanLottery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaiwanLottery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63D4474F28FD3AC4005251F1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		63D4475128FD3AC4005251F1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -87,7 +87,7 @@
 			isa = PBXGroup;
 			children = (
 				637279D128FD4DC3009A2500 /* LotteoryModel.swift */,
-				637279D328FD4F6D009A2500 /* HttpClient.swift */,
+				637279D328FD4F6D009A2500 /* TLHttpClient.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -103,8 +103,7 @@
 		6387F836290785DC0034346E /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				6387F837290785F60034346E /* UIExtension.swift */,
-				6387F839290786260034346E /* UIColorExtension.swift */,
+				6387F837290785F60034346E /* UIApplicationExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -151,6 +150,7 @@
 		63D4474E28FD3AC4005251F1 /* TaiwanLottery */ = {
 			isa = PBXGroup;
 			children = (
+				6355BF31290BAD8000AA9830 /* TLDefine.swift */,
 				63D4474F28FD3AC4005251F1 /* AppDelegate.swift */,
 				63D4475128FD3AC4005251F1 /* SceneDelegate.swift */,
 				6387F836290785DC0034346E /* Extension */,
@@ -177,7 +177,7 @@
 			buildConfigurationList = 63D4476028FD3AC7005251F1 /* Build configuration list for PBXNativeTarget "TaiwanLottery" */;
 			buildPhases = (
 				1A1376136A5B7B351D205957 /* [CP] Check Pods Manifest.lock */,
-				6396B7F6290680440014AEC5 /* Run Script */,
+				6396B7F6290680440014AEC5 /* Run Swiftlint Script */,
 				63D4474828FD3AC4005251F1 /* Sources */,
 				63D4474928FD3AC4005251F1 /* Frameworks */,
 				63D4474A28FD3AC4005251F1 /* Resources */,
@@ -260,8 +260,9 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6396B7F6290680440014AEC5 /* Run Script */ = {
+		6396B7F6290680440014AEC5 /* Run Swiftlint Script */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -269,7 +270,7 @@
 			);
 			inputPaths = (
 			);
-			name = "Run Script";
+			name = "Run Swiftlint Script";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -287,16 +288,16 @@
 			files = (
 				63D4475428FD3AC4005251F1 /* LotteryStoresMapViewController.swift in Sources */,
 				6382882C290151A200F38246 /* DropDownTableViewCell.swift in Sources */,
+				6355BF32290BAD8000AA9830 /* TLDefine.swift in Sources */,
 				63D4475028FD3AC4005251F1 /* AppDelegate.swift in Sources */,
 				63828828290130CA00F38246 /* CustomViewController.swift in Sources */,
 				637279D228FD4DC3009A2500 /* LotteoryModel.swift in Sources */,
-				637279D428FD4F6D009A2500 /* HttpClient.swift in Sources */,
+				637279D428FD4F6D009A2500 /* TLHttpClient.swift in Sources */,
 				63D4475228FD3AC4005251F1 /* SceneDelegate.swift in Sources */,
 				637279DE28FE5CE7009A2500 /* LotteryStoreCollectionViewCell.swift in Sources */,
-				6387F83A290786260034346E /* UIColorExtension.swift in Sources */,
 				6382882A29014AF100F38246 /* DropDownButton.swift in Sources */,
 				637279DB28FE56F0009A2500 /* LotteryStoresListViewController.swift in Sources */,
-				6387F838290785F60034346E /* UIExtension.swift in Sources */,
+				6387F838290785F60034346E /* UIApplicationExtension.swift in Sources */,
 				6379B94329000D1900BDA556 /* ParentViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -365,7 +366,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -419,7 +420,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -23,19 +25,19 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FmW-A6-8fE">
-                        <rect key="frame" x="8" y="39" width="91" height="22"/>
+                        <rect key="frame" x="8" y="39" width="105.33333333333333" height="22"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D5g-Mw-HXv">
-                        <rect key="frame" x="105" y="12" width="81" height="11.666666666666664"/>
+                        <rect key="frame" x="119.33333333333331" y="12" width="66.666666666666686" height="11.666666666666664"/>
                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                         <color key="textColor" systemColor="systemOrangeColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G1C-el-Pcq">
-                        <rect key="frame" x="109" y="30" width="73" height="40"/>
+                        <rect key="frame" x="123.33333333333333" y="30" width="58.666666666666671" height="40"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="40" id="k1z-Jh-rL5"/>
                         </constraints>
@@ -44,7 +46,7 @@
                         <state key="normal" title="導航" image="iconDirection">
                             <color key="titleColor" systemColor="systemBackgroundColor"/>
                         </state>
-                        <buttonConfiguration key="configuration" style="filled" image="iconDirection" title="導航">
+                        <buttonConfiguration key="configuration" style="filled" title="導航">
                             <color key="baseBackgroundColor" red="0.95125467443418976" green="0.75853005498877712" blue="0.31217873419611508" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         </buttonConfiguration>
                         <connections>

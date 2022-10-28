@@ -23,7 +23,7 @@ class DropDownBtn: UIButton, DropDownProtocol {
     var height = NSLayoutConstraint()
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.init(rgb: 0xE6813C)
+        self.backgroundColor = UIColor.darkOrangeColor
         dropView = DropDownView.init(frame: CGRect.init(x: 0, y: 0, width: 0, height: 0))
         dropView.delegate = self
         dropView.translatesAutoresizingMaskIntoConstraints = false
