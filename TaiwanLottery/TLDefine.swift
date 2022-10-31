@@ -12,6 +12,7 @@ let kWebSerViceURL: String = "https://smuat.megatime.com.tw/taiwanlottery/api"
 let kWSEncryptEnabled: Bool = true
 // #endif
 // Home/Station
+// URL Path Webservice 
 // taiwanLotteryWebServiePathProtocol
 protocol TLWSPathProtocol {
     // return String
@@ -53,6 +54,7 @@ extension UIColor {
 // MARK: - Image
 extension UIImage {
     // background
+    // cal 方法 
     class var iconDirection: UIImage {
         return UIImage(named: "iconDirection")!
         

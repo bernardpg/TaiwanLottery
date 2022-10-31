@@ -13,11 +13,25 @@ struct CreateRequestBody: Encodable {
     let distance: Double
 
 }
+// generic + propertywrapper
 
-struct CreateUserResponse: Decodable {
-    let rtCode: Int
-    let rtMsg: String
-    let content: LotteryStores
+// @propertyWrapper
+struct TLResponse<E: Decodable>: Decodable {
+    let code: Int
+    let msg: String
+    var content: E?
+    
+    private enum CodingKeys: String, CodingKey {
+        case code = "rtCode"
+        case msg = "rtMsg"
+        case content
+    }
+    
+    init(rtCode: Int, rtMsg: String, content: E) {
+        self.code = rtCode
+        self.msg = rtMsg
+        self.content = content
+    }
 }
 
 struct LotteryStores: Decodable {

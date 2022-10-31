@@ -110,7 +110,7 @@ extension LotteryStoresListViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - LotteryStorecvCellDelegate Navigation
 
 extension LotteryStoresListViewController:
-    LotteryStorecvCellDelegate {
+    LotteryStoreCellDelegate {
     func passLocaitonInfo(location: Location) {
         let targetLocation = CLLocationCoordinate2D(latitude: location.lat, longitude: location.lon)
         navigationLocaitonDelegate?.requestNavigation(location: targetLocation)

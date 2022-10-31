@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  TaiwanLottery
+
+  Created by 1ms20p on 2022/10/28.
+  
+*/
+
+
+// MARK: - Station
+"Text:km" = "%@公里";
+"Text:navigation" = "導航";

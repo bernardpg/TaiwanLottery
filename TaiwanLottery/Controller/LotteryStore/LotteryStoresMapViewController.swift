@@ -353,7 +353,7 @@ extension LotteryStoresMapViewController: UICollectionViewDataSource {
 }
 
 // MARK: - LotteryStorecvCellDelegate Navigation
-extension LotteryStoresMapViewController: LotteryStorecvCellDelegate {
+extension LotteryStoresMapViewController: LotteryStoreCellDelegate {
     func passLocaitonInfo(location: Location) {
         let targetLocation = CLLocationCoordinate2D(latitude: location.lat, longitude: location.lon)
         navigationLocaitonDelegate?.requestNavigation(location: targetLocation)

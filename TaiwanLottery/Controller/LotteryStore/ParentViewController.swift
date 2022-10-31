@@ -192,10 +192,10 @@ extension ParentViewController: CLLocationManagerDelegate {
                     distance: Double) {
         TLHttpClient.shared.postAPILottery(
             url: url, lat: latitude, lon: longtitude,
-            distance: distance) { [weak self] result in
+            distance: distance) { [weak self] (result: Result<TLResponse<LotteryStores>, NetworkErrorConditions>) in
                 switch result {
                 case .success(let decodedData):
-                        self?.m_listLotteriesInfo = decodedData.content.list.sorted(by: { $0.distance < $1.distance })
+                    self?.m_listLotteriesInfo = decodedData.content?.list.sorted(by: { $0.distance < $1.distance }) ?? []
                         self?.m_vcMapView.configureFromParent()
                         self?.m_vcLotteryStoreList.configureFromParent()
                 case .failure:

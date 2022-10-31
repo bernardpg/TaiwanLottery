@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6355BF32290BAD8000AA9830 /* TLDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6355BF31290BAD8000AA9830 /* TLDefine.swift */; };
+		6355BF36290BED7300AA9830 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6355BF38290BED7300AA9830 /* Localizable.strings */; };
 		637279D228FD4DC3009A2500 /* LotteoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637279D128FD4DC3009A2500 /* LotteoryModel.swift */; };
 		637279D428FD4F6D009A2500 /* TLHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637279D328FD4F6D009A2500 /* TLHttpClient.swift */; };
 		637279DB28FE56F0009A2500 /* LotteryStoresListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637279DA28FE56F0009A2500 /* LotteryStoresListViewController.swift */; };
@@ -29,6 +30,9 @@
 /* Begin PBXFileReference section */
 		3F87408D736DCCDB2E497A95 /* Pods-TaiwanLottery.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaiwanLottery.release.xcconfig"; path = "Target Support Files/Pods-TaiwanLottery/Pods-TaiwanLottery.release.xcconfig"; sourceTree = "<group>"; };
 		6355BF31290BAD8000AA9830 /* TLDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLDefine.swift; sourceTree = "<group>"; };
+		6355BF33290BECEB00AA9830 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		6355BF37290BED7300AA9830 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6355BF39290BED7A00AA9830 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		637279D128FD4DC3009A2500 /* LotteoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LotteoryModel.swift; sourceTree = "<group>"; };
 		637279D328FD4F6D009A2500 /* TLHttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLHttpClient.swift; sourceTree = "<group>"; };
 		637279DA28FE56F0009A2500 /* LotteryStoresListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LotteryStoresListViewController.swift; sourceTree = "<group>"; };
@@ -133,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				63D4474E28FD3AC4005251F1 /* TaiwanLottery */,
+				6355BF38290BED7300AA9830 /* Localizable.strings */,
 				63D4474D28FD3AC4005251F1 /* Products */,
 				0863BE49C326E1E46F5F2677 /* Pods */,
 				82A1FD34092108FB2A7D7CD1 /* Frameworks */,
@@ -213,6 +218,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hant",
 			);
 			mainGroup = 63D4474328FD3AC4005251F1;
 			productRefGroup = 63D4474D28FD3AC4005251F1 /* Products */;
@@ -230,6 +236,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63D4475C28FD3AC7005251F1 /* LaunchScreen.storyboard in Resources */,
+				6355BF36290BED7300AA9830 /* Localizable.strings in Resources */,
 				63D4475928FD3AC7005251F1 /* Assets.xcassets in Resources */,
 				637279DF28FE5CE7009A2500 /* LotteryStoreCollectionViewCell.xib in Resources */,
 			);
@@ -305,10 +312,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		6355BF38290BED7300AA9830 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6355BF37290BED7300AA9830 /* en */,
+				6355BF39290BED7A00AA9830 /* zh-Hant */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		63D4475A28FD3AC7005251F1 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				63D4475B28FD3AC7005251F1 /* Base */,
+				6355BF33290BECEB00AA9830 /* zh-Hant */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -320,6 +337,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -380,6 +398,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";

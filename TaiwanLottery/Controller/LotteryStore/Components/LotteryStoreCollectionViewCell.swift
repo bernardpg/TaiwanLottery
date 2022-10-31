@@ -7,14 +7,14 @@
 
 import UIKit
 
-protocol LotteryStorecvCellDelegate: AnyObject {
+protocol LotteryStoreCellDelegate: AnyObject {
     // get index 傳cell 可能會造成reuse問題
     func passLocaitonInfo(location: Location)
 }
 
 class LotteryStoreCollectionViewCell: UICollectionViewCell {
     private var m_location = Location(lat: 0, lon: 0)
-    weak var delegate: LotteryStorecvCellDelegate?
+    weak var delegate: LotteryStoreCellDelegate?
     private var m_logitude: Double?
     private var m_latitude: Double?
     @IBOutlet weak var lbLotteryName: UILabel!

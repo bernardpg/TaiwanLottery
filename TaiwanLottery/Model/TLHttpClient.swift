@@ -14,11 +14,11 @@ enum NetworkErrorConditions: Error {
 // Singletion
 class TLHttpClient {
     static let shared = TLHttpClient()
-    func postAPILottery(url: URL,
-                        lat: Double,
-                        lon: Double,
-                        distance: Double,
-                        completion: @escaping(Result<CreateUserResponse, NetworkErrorConditions>) -> Void) {
+    func postAPILottery<E: Decodable>(url: URL,
+                                      lat: Double,
+                                      lon: Double,
+                                      distance: Double,
+                                      completion: @escaping(Result<TLResponse<E>, NetworkErrorConditions>) -> Void) {
         // response 多型 generic
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -33,7 +33,7 @@ class TLHttpClient {
             if let data = data {
                 do {
                     let decoder = JSONDecoder()
-                    let createUserResponse = try decoder.decode(CreateUserResponse.self, from: data)
+                    let createUserResponse = try decoder.decode(TLResponse<E>.self, from: data)
                     DispatchQueue.main.async {
                         completion(.success(createUserResponse))
                     }

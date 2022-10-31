@@ -18,11 +18,13 @@ class DropDownTableViewCell: UITableViewCell {
         label.textAlignment = .center
         return label
     }()
+    
     func configureUI(title: String) {
         m_lbTitle.text = title
     }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super .init(style: style, reuseIdentifier: reuseIdentifier)
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(m_lbTitle)
         m_lbTitle.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         m_lbTitle.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
