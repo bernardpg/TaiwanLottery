@@ -8,19 +8,15 @@
 import UIKit
 
 protocol DropDownProtocol: AnyObject {
-    func dropDownPressed( string: String )
+    func dropDownPressed(_ distance: LotteryDistances)
 }
 
 class DropDownBtn: UIButton, DropDownProtocol {
-    func dropDownPressed(string: String) {
-        self.setTitle(string, for: .normal)
-        let kwantedDistance = string.filter { "0123456789".contains($0) }
-        NotificationCenter.default.post(name: kNotificationChange, object: Double(kwantedDistance))
-        self.dismissDropDown()
-    }
+    
     var dropView = DropDownView()
-    let kNotificationChange = Notification.Name("changeDistance")
     var height = NSLayoutConstraint()
+    var isOpen = false
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.darkOrangeColor
@@ -28,6 +24,11 @@ class DropDownBtn: UIButton, DropDownProtocol {
         dropView.delegate = self
         dropView.translatesAutoresizingMaskIntoConstraints = false
     }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func didMoveToSuperview() {
         self.superview?.addSubview(dropView)
         self.superview?.bringSubviewToFront(dropView)
@@ -36,14 +37,14 @@ class DropDownBtn: UIButton, DropDownProtocol {
         dropView.widthAnchor.constraint(equalTo: self.widthAnchor).isActive = true
         height = dropView.heightAnchor.constraint(equalToConstant: 0)
     }
-    var isOpen = false
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if isOpen == false {
             isOpen = true
             NSLayoutConstraint.deactivate([self.height])
                 self.height.constant = self.dropView.tvDropdown.contentSize.height
             NSLayoutConstraint.activate([self.height])
-            UIView.animate( withDuration: 0.5, delay: 0,
+            UIView.animate(withDuration: 0.5, delay: 0,
                            usingSpringWithDamping: 0.5,
                            initialSpringVelocity: 0.5, options: .curveEaseInOut,
                            animations: {
@@ -64,6 +65,14 @@ class DropDownBtn: UIButton, DropDownProtocol {
             }, completion: nil)
         }
     }
+    
+    func dropDownPressed(_ distance: LotteryDistances) {
+        self.setTitle(LStringFormat("Text:Intkm", distance.rawValue), for: .normal)
+        // ideal enum selected (傳enum)
+        NotificationCenter.default.post(name: .notifyChangeDistance, object: distance)
+        self.dismissDropDown()
+    }
+
     func dismissDropDown() {
         isOpen = false
         NSLayoutConstraint.deactivate([self.height])
@@ -77,15 +86,14 @@ class DropDownBtn: UIButton, DropDownProtocol {
             self.dropView.layoutIfNeeded()
         }, completion: nil)
     }
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 }
 
 class DropDownView: UIView, UITableViewDelegate, UITableViewDataSource {
-    var dropDownOptions = [String]()
+    // allcase enumtype
+    var dropDownOptions = [LotteryDistances]()
     var tvDropdown = UITableView()
     weak var delegate: DropDownProtocol?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         tvDropdown.backgroundColor = UIColor.clear
@@ -100,28 +108,35 @@ class DropDownView: UIView, UITableViewDelegate, UITableViewDataSource {
         tvDropdown.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         tvDropdown.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
     }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dropDownOptions.count
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: DropDownTableViewCell.reuseIdentifier,
             for: indexPath) as? DropDownTableViewCell else { return UITableViewCell()  }
-        cell.configureUI(title: dropDownOptions[indexPath.row] )
+        // 公里 多國語系
+        cell.configureUI(title: LStringFormat("Text:Intkm", dropDownOptions[indexPath.row].rawValue))
         cell.layer.cornerRadius = 5
         cell.backgroundColor = UIColor.white
         return cell
     }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.delegate?.dropDownPressed(string: dropDownOptions[indexPath.row])
+        self.delegate?.dropDownPressed( dropDownOptions[indexPath.row])
         self.tvDropdown.deselectRow(at: indexPath, animated: true)
     }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         30
     }

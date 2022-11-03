@@ -7,15 +7,13 @@
 
 import Foundation
 
-struct CreateRequestBody: Encodable {
+struct TLStationRequestDTO: Encodable {
     let lat: Double
     let lon: Double
     let distance: Double
 
 }
-// generic + propertywrapper
 
-// @propertyWrapper
 struct TLResponse<E: Decodable>: Decodable {
     let code: Int
     let msg: String

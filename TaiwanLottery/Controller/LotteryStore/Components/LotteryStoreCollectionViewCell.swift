@@ -13,14 +13,18 @@ protocol LotteryStoreCellDelegate: AnyObject {
 }
 
 class LotteryStoreCollectionViewCell: UICollectionViewCell {
-    private var m_location = Location(lat: 0, lon: 0)
-    weak var delegate: LotteryStoreCellDelegate?
-    private var m_logitude: Double?
-    private var m_latitude: Double?
+    
     @IBOutlet weak var lbLotteryName: UILabel!
     @IBOutlet weak var lbLotteryDistance: UILabel!
     @IBOutlet weak var lbLotteryAddress: UILabel!
     @IBOutlet weak var btnLotteryNavigaton: UIButton!
+ 
+    private var m_location = Location(lat: 0, lon: 0)
+    weak var delegate: LotteryStoreCellDelegate?
+    private var m_logitude: Double?
+    private var m_latitude: Double?
+    static let reuseIdentifier: String =  "LotteryStoreCollectionViewCell"
+    
     // MARK: init
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -57,8 +61,8 @@ class LotteryStoreCollectionViewCell: UICollectionViewCell {
     func configure(lotteryName: String, lotteryAddress: String, lotteryDistance: Double, lon: Double, lat: Double) {
         self.lbLotteryName.text = lotteryName
         self.lbLotteryAddress.text = lotteryAddress
-        self.lbLotteryDistance.text = "\(lotteryDistance) 公里"
-        self.btnLotteryNavigaton.setTitle("導航", for: .normal)
+        self.lbLotteryDistance.text = LStringFormat("Text:LotteryStorefloatkm", lotteryDistance)
+        self.btnLotteryNavigaton.setTitle(LStringFormat("Text:Navigate"), for: .normal)
         self.m_logitude = lon
         self.m_latitude = lat
     }

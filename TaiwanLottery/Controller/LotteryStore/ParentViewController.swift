@@ -12,19 +12,20 @@ import CoreLocation
 protocol LotteryListDataSource: AnyObject {
     func passDataFromParent() -> [LotteryInfo]
 }
-
+// TL 
 class ParentViewController: UIViewController {
+    // enum chnage better
     private var m_changeDistance = 1.0 {
-        didSet { 
+        didSet {
             if m_defaultLocation != nil {
                 getAPIData(
                     latitude: m_defaultLocation?.coordinate.latitude ?? 0,
                     longtitude: m_defaultLocation?.coordinate.longitude ?? 0,
                     distance: m_changeDistance)
             } else if m_currentLocation != nil { getAPIData(
-                    latitude: m_currentLocation?.coordinate.latitude ?? 0,
-                    longtitude: m_currentLocation?.coordinate.longitude ?? 0,
-                    distance: m_changeDistance)
+                latitude: m_currentLocation?.coordinate.latitude ?? 0,
+                longtitude: m_currentLocation?.coordinate.longitude ?? 0,
+                distance: m_changeDistance)
             }
         }
     }
@@ -33,12 +34,11 @@ class ParentViewController: UIViewController {
     // MARK: - Property
     private lazy var m_vcMapView = LotteryStoresMapViewController()
     
-    let url = URL(string: "https://smuat.megatime.com.tw/taiwanlottery/api/Home/Station")!
     private lazy var m_vcLotteryStoreList = LotteryStoresListViewController()
     private lazy var m_btnChange: UIBarButtonItem = {
-        let barButtomItem = UIBarButtonItem(image: UIImage(named: "switchModeMapMode"),
-            style: .plain, target: self,
-            action: #selector(changechildViewController))
+        let barButtomItem = UIBarButtonItem(image: UIImage.switchModeMapMode,
+                                            style: .plain, target: self,
+                                            action: #selector(changechildViewController))
         barButtomItem.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         return barButtomItem
     }()
@@ -46,6 +46,7 @@ class ParentViewController: UIViewController {
     private var m_currentLocation: CLLocation?
     private var m_defaultLocation: CLLocation?
     var authorizationStatus: CLAuthorizationStatus?
+    
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,7 +70,7 @@ class ParentViewController: UIViewController {
             m_locationManager.distanceFilter = kCLHeadingFilterNone
             m_locationManager.requestWhenInUseAuthorization()
             m_locationManager.startUpdatingLocation()
-          fallthrough
+            fallthrough
         case .authorizedWhenInUse:
             m_locationManager.requestWhenInUseAuthorization()
             m_locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -81,35 +82,39 @@ class ParentViewController: UIViewController {
             getAPIData(
                 latitude: m_defaultLocation?.coordinate.latitude ?? 0,
                 longtitude: m_defaultLocation?.coordinate.longitude ?? 0, distance: 1)
-          let alertController = UIAlertController(
-            title: "定位權限已關閉",
-            message: "如要變更權限，請至 設定 > 隱私權 > 定位服務 開啟",
-            preferredStyle: .alert)
-          let okAction = UIAlertAction(title: "確認", style: .default, handler: nil)
-          alertController.addAction(okAction)
-          self.present(alertController, animated: true, completion: nil)
+            // string 多國語系
+            let alertController = UIAlertController(
+                title: "定位權限已關閉",
+                message: "如要變更權限，請至 設定 > 隱私權 > 定位服務 開啟",
+                preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "確認", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
         default:
-          break }
-
+            break
+        }
+        
         // location start
         setupNavgation()
-        let notificationName = Notification.Name("changeDistance")
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(reloadMapData(_:)),
-            name: notificationName,
+            name: .notifyChangeDistance,
             object: nil )
         add(childViewController: m_vcMapView,
             to: self.view)
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print(m_locationManager.authorizationStatus)
-//        locationManagerDidChangeAuthorization(m_locationManager)
+        //        locationManagerDidChangeAuthorization(m_locationManager)
     }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
+    
     // MARK: navigationsetting
     private func setupNavgation() {
         self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.darkOrangeColor]
@@ -117,30 +122,32 @@ class ParentViewController: UIViewController {
         let barButtomItem = m_btnChange
         self.navigationItem.setRightBarButton(barButtomItem, animated: true)
     }
+    
     @objc private func changechildViewController() {
         // change selection
-        if self.navigationItem.rightBarButtonItem?.image == UIImage(named: "switchModeMapMode") {
-            self.navigationItem.rightBarButtonItem?.image = UIImage(named: "switchModeListMode")
-//            mapViewvc.willMove(toParent: nil)
-//            mapViewvc.removeFromParent()
+        if self.navigationItem.rightBarButtonItem?.image == UIImage.switchModeMapMode {
+            self.navigationItem.rightBarButtonItem?.image =
+            UIImage.switchModeListMode
+            //            mapViewvc.willMove(toParent: nil)
+            //            mapViewvc.removeFromParent()
             add(childViewController: m_vcLotteryStoreList,
                 to: self.view)
         } else {
-            self.navigationItem.rightBarButtonItem?.image = UIImage(named: "switchModeMapMode")
-//            lotteryStoreListvc.willMove(toParent: nil)
-//            lotteryStoreListvc.removeFromParent()
+            self.navigationItem.rightBarButtonItem?.image = UIImage.switchModeMapMode
+            //            lotteryStoreListvc.willMove(toParent: nil)
+            //            lotteryStoreListvc.removeFromParent()
             add(childViewController: m_vcMapView,
                 to: self.view)
         }
     }
+    
     @objc private func reloadMapData( _ notification: NSNotification) {
-        guard let changeNumber = notification.object as? Double else { return }
-        m_changeDistance = changeNumber
+        guard let changeNumber = notification.object as? LotteryDistances else { return }
+        m_changeDistance = Double(changeNumber.rawValue)
     }
 }
 
 // MARK: childVC  UI Setup
-
 extension UIViewController {
     func add(childViewController viewController: UIViewController, to contentView: UIView) {
         let matchParentConstraints = [
@@ -155,6 +162,7 @@ extension UIViewController {
         NSLayoutConstraint.activate(matchParentConstraints)
         viewController.didMove(toParent: self)
     }
+    
     // MARK: make sure deinit
     func remove(childViewController viewController: UIViewController) {
         // Just to be safe, we check that this view controller
@@ -186,23 +194,27 @@ extension ParentViewController: CLLocationManagerDelegate {
         } else {
         }
     }
+    
+    // CreateRequestBody
     // MARK: ParentVC to MapVC and ListVC
     func getAPIData(latitude: CLLocationDegrees,
                     longtitude: CLLocationDegrees,
                     distance: Double) {
-        TLHttpClient.shared.postAPILottery(
-            url: url, lat: latitude, lon: longtitude,
-            distance: distance) { [weak self] (result: Result<TLResponse<LotteryStores>, NetworkErrorConditions>) in
+        TLHttpClient.shared.lotteryAPI(
+            method: .post, TLStationRequestDTO(lat: latitude, lon: longtitude, distance: distance), url: URL(string: TLWSPathHome.Station.urlPath())!) { [weak self] (result: Result<TLResponse<LotteryStores>, NetworkErrorConditions>) in
                 switch result {
                 case .success(let decodedData):
                     self?.m_listLotteriesInfo = decodedData.content?.list.sorted(by: { $0.distance < $1.distance }) ?? []
-                        self?.m_vcMapView.configureFromParent()
-                        self?.m_vcLotteryStoreList.configureFromParent()
-                case .failure:
-                    print("Decode error")
+                    self?.m_vcMapView.configureFromParent()
+                    self?.m_vcLotteryStoreList.configureFromParent()
+                case .failure(let errordata):
+                    // UIAlert error handling
+                    print(errordata.type)
+                    print(errordata)
                 }
             }
     }
+    
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         if #available(iOS 14, *) {
             authorizationStatus = manager.authorizationStatus
@@ -216,7 +228,7 @@ extension ParentViewController: CLLocationManagerDelegate {
             manager.distanceFilter = kCLHeadingFilterNone
             manager.requestWhenInUseAuthorization()
             manager.startUpdatingLocation()
-          fallthrough
+            fallthrough
         case .authorizedWhenInUse:
             m_defaultLocation = nil
             m_currentLocation = nil
@@ -231,29 +243,32 @@ extension ParentViewController: CLLocationManagerDelegate {
             getAPIData(
                 latitude: m_defaultLocation?.coordinate.latitude ?? 0,
                 longtitude: m_defaultLocation?.coordinate.longitude ?? 0, distance: 1)
-          let alertController = UIAlertController(
-            title: "定位權限已關閉",
-            message: "如要變更權限，請至 設定 > 隱私權 > 定位服務 開啟",
-            preferredStyle: .alert)
-          let okAction = UIAlertAction(title: "確認", style: .default, handler: nil)
-          alertController.addAction(okAction)
-          self.present(alertController, animated: true, completion: nil)
+            let alertController = UIAlertController(
+                title: "定位權限已關閉",
+                message: "如要變更權限，請至 設定 > 隱私權 > 定位服務 開啟",
+                preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "確認", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
         default:
-          break }
+            break
+        }
     }
 }
+
 extension ParentViewController: LotteryListDataSource {
     func passDataFromParent() -> [LotteryInfo] {
         return self.m_listLotteriesInfo
     }
 }
+
 // MARK: Navigation Map
 extension ParentViewController: PassoutNavigationDelegate {
     func requestNavigation(location: CLLocationCoordinate2D) {
-        let kAppleMaps = "https://maps.apple.com/?saddr=Current Location&daddr=%f,%f&z=10&t=s"
+        let kAppleMaps = kAppleMaps
         guard let str = String(format: kAppleMaps, location.latitude, location.longitude).addingPercentEncoding(
             withAllowedCharacters: .urlQueryAllowed) else {
-                return
+            return
         }
         UIApplication.shared.openURL(str)
     }

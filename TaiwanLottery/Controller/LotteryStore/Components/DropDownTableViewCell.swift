@@ -8,10 +8,11 @@
 import UIKit
 
 class DropDownTableViewCell: UITableViewCell {
+    
     static let reuseIdentifier = "\(DropDownTableViewCell.self)"
     private lazy var m_lbTitle: UILabel = {
         let label =  UILabel()
-        label.font = UIFont(name: "PingFang TC", size: 12)
+        label.font = UIFont.pinFangTC
         label.numberOfLines = 0
         label.textColor = UIColor.darkOrangeColor
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -31,6 +32,7 @@ class DropDownTableViewCell: UITableViewCell {
         m_lbTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         m_lbTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
     }
+    // trace code 
     required init(coder aDecoder: NSCoder) {
          fatalError("init(coder:) has not been implemented")
     }

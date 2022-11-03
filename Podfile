@@ -8,6 +8,7 @@ target 'TaiwanLottery' do
   # Pods for TaiwanLottery
 pod 'SwiftGen', '~> 6.0'
 pod 'SwiftLint'
+pod 'Alamofire'
 
 end
 
