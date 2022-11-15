@@ -14,19 +14,19 @@ import CoreLocation
 // bool 偵測
 
 // 附近投注站預設位置
-protocol PassoutNavigationDelegate: AnyObject {
+protocol TLPassoutNavigationDelegate: AnyObject {
     func requestNavigation(location: CLLocationCoordinate2D)
 }
 
-class LotteryStoresMapViewController: UIViewController {
-    var btnDropdown = DropDownBtn()
+class TLLotteryStoresMapViewController: UIViewController {
+    var btnDropdown = TLDropDownBtn()
     // MARK: Properties
     private lazy var m_vMap: MKMapView = {
         let map = MKMapView()
         return map
     }()
-    weak var mapLotteryListDatasource: LotteryListDataSource?
-    weak var navigationLocaitonDelegate: PassoutNavigationDelegate?
+    weak var mapLotteryListDatasource: TLLotteryListDataSource?
+    weak var navigationLocaitonDelegate: TLPassoutNavigationDelegate?
     private var m_routeCoordinates: [CLLocation] = []
     private lazy var m_cvLotteryInfo: UICollectionView = {
         let layout: UICollectionViewLayout = {
@@ -41,7 +41,7 @@ class LotteryStoresMapViewController: UIViewController {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.register(
             UINib(nibName: "LotteryStoreCollectionViewCell", bundle: nil),
-            forCellWithReuseIdentifier: LotteryStoreCollectionViewCell.reuseIdentifier)
+            forCellWithReuseIdentifier: TLLotteryStoreCollectionViewCell.reuseIdentifier)
         collection.backgroundColor = .clear
         collection.showsHorizontalScrollIndicator = false
         return collection
@@ -50,8 +50,6 @@ class LotteryStoresMapViewController: UIViewController {
     private var m_currentLocation: CLLocation?
     private var m_defaultLocation: CLLocation?
     var authorizationStatus: CLAuthorizationStatus?
-    //    let allCase = LotteryDistances.allCases.map({$0.rawValue})
-    let kAryDistance: [Int] = [5, 2, 1]
     
     // MARK: - View Life Cycle
     override func viewDidLoad() {
@@ -67,6 +65,7 @@ class LotteryStoresMapViewController: UIViewController {
         } else {
             authorizationStatus = m_locationManager.authorizationStatus
         }
+        
         switch authorizationStatus {
         case .notDetermined:
             m_locationManager.requestWhenInUseAuthorization()
@@ -89,10 +88,10 @@ class LotteryStoresMapViewController: UIViewController {
                 longitudinalMeters: 1500)
             m_vMap.setRegion(viewRegion, animated: false)
             let alertController = UIAlertController(
-                title: "定位權限已關閉",
-                message: "如要變更權限，請至 設定 > 隱私權 > 定位服務 開啟",
+                title: LString("AlertInfo:NavigationTitle"),
+                message: LString("AlertInfo:NavigationMessage"),
                 preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "確認", style: .default, handler: nil)
+            let okAction = UIAlertAction(title: LString("AlertAction:Confirmed"), style: .default, handler: nil)
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
         default:
@@ -119,7 +118,7 @@ class LotteryStoresMapViewController: UIViewController {
             m_cvLotteryInfo.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             m_cvLotteryInfo.heightAnchor.constraint(equalTo: m_cvLotteryInfo.widthAnchor, multiplier: 1.0/5.0)
         ])
-        btnDropdown = DropDownBtn.init(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        btnDropdown = TLDropDownBtn.init(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         btnDropdown.setTitle(LStringFormat("Text:Intkm", LotteryDistances.oneKilo.rawValue), for: .normal)
         btnDropdown.titleLabel?.font = UIFont.pinFangTC
         btnDropdown.translatesAutoresizingMaskIntoConstraints = false
@@ -133,7 +132,6 @@ class LotteryStoresMapViewController: UIViewController {
         btnDropdown.heightAnchor.constraint(equalToConstant: 25).isActive = true
         // enum localize  string 丟進去好處 enum
         btnDropdown.dropView.dropDownOptions = LotteryDistances.allCases
-        //        kallLotteryDistance
     }
     
     // MARK: configure function from ParentView
@@ -147,7 +145,7 @@ class LotteryStoresMapViewController: UIViewController {
 }
 
 // MARK: - MapKit Pin (local location)
-extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
+extension TLLotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
     func locationManager(
         _ manager: CLLocationManager,
         didUpdateLocations locations: [CLLocation]) {
@@ -205,10 +203,10 @@ extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDe
                 longitudinalMeters: 1500)
             m_vMap.setRegion(viewRegion, animated: false)
             let alertController = UIAlertController(
-                title: "定位權限已關閉",
-                message: "如要變更權限，請至 設定 > 隱私權 > 定位服務 開啟",
+                title: LString("AlertInfo:NavigationTitle"),
+                message: LString("AlertInfo:NavigationMessage"),
                 preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "確認", style: .default, handler: nil)
+            let okAction = UIAlertAction(title: LString("AlertAction:Confirmed"), style: .default, handler: nil)
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
         default:
@@ -243,7 +241,7 @@ extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDe
     
     // Annotation
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let annotationView = LotteryAnnotationView(
+        let annotationView = TLLotteryAnnotationView(
             annotation: annotation,
             reuseIdentifier: "custom")
         annotationView.canShowCallout = true
@@ -275,7 +273,7 @@ extension LotteryStoresMapViewController: CLLocationManagerDelegate, MKMapViewDe
 
 // MARK: - CollectionView FlowLayout
 
-extension LotteryStoresMapViewController: UICollectionViewDelegateFlowLayout, UIScrollViewDelegate {
+extension TLLotteryStoresMapViewController: UICollectionViewDelegateFlowLayout, UIScrollViewDelegate {
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         guard let layout = m_cvLotteryInfo.collectionViewLayout as? UICollectionViewFlowLayout else { return   }
         guard let listLottery =  mapLotteryListDatasource?.passDataFromParent() else { return }
@@ -329,7 +327,7 @@ extension LotteryStoresMapViewController: UICollectionViewDelegateFlowLayout, UI
 }
 
 // MARK: - CollectionViewDelegate
-extension LotteryStoresMapViewController: UICollectionViewDelegate {
+extension TLLotteryStoresMapViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let listLottery =  mapLotteryListDatasource?.passDataFromParent() else { return }
         for annotationsItem in m_vMap.annotations where  annotationsItem.coordinate.latitude == listLottery[indexPath.row].lat {
@@ -339,7 +337,7 @@ extension LotteryStoresMapViewController: UICollectionViewDelegate {
 }
 
 // MARK: - Colleciton View DataSource
-extension LotteryStoresMapViewController: UICollectionViewDataSource {
+extension TLLotteryStoresMapViewController: UICollectionViewDataSource {
     func collectionView(
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int) -> Int {
@@ -351,8 +349,8 @@ extension LotteryStoresMapViewController: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: LotteryStoreCollectionViewCell.reuseIdentifier,
-                for: indexPath) as? LotteryStoreCollectionViewCell
+                withReuseIdentifier: TLLotteryStoreCollectionViewCell.reuseIdentifier,
+                for: indexPath) as? TLLotteryStoreCollectionViewCell
             else { return UICollectionViewCell()  }
             guard let listLottery =  mapLotteryListDatasource?.passDataFromParent()
             else { return UICollectionViewCell() }
@@ -369,8 +367,8 @@ extension LotteryStoresMapViewController: UICollectionViewDataSource {
 }
 
 // MARK: - LotteryStorecvCellDelegate Navigation
-extension LotteryStoresMapViewController: LotteryStoreCellDelegate {
-    func passLocaitonInfo(location: Location) {
+extension TLLotteryStoresMapViewController: TLLotteryStoreCellDelegate {
+    func passLocaitonInfo(location: TLLocation) {
         let targetLocation = CLLocationCoordinate2D(latitude: location.lat, longitude: location.lon)
         navigationLocaitonDelegate?.requestNavigation(location: targetLocation)
     }
@@ -409,7 +407,7 @@ class LotteryMKAnnotation: NSObject, MKAnnotation {
     }
 }
 
-class LotteryAnnotationView: MKAnnotationView {
+class TLLotteryAnnotationView: MKAnnotationView {
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         guard

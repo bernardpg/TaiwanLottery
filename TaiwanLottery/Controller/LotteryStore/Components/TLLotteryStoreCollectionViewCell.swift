@@ -7,20 +7,20 @@
 
 import UIKit
 
-protocol LotteryStoreCellDelegate: AnyObject {
+protocol TLLotteryStoreCellDelegate: AnyObject {
     // get index 傳cell 可能會造成reuse問題
-    func passLocaitonInfo(location: Location)
+    func passLocaitonInfo(location: TLLocation)
 }
 
-class LotteryStoreCollectionViewCell: UICollectionViewCell {
+class TLLotteryStoreCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var lbLotteryName: UILabel!
     @IBOutlet weak var lbLotteryDistance: UILabel!
     @IBOutlet weak var lbLotteryAddress: UILabel!
     @IBOutlet weak var btnLotteryNavigaton: UIButton!
  
-    private var m_location = Location(lat: 0, lon: 0)
-    weak var delegate: LotteryStoreCellDelegate?
+    private var m_location = TLLocation(lat: 0, lon: 0)
+    weak var delegate: TLLotteryStoreCellDelegate?
     private var m_logitude: Double?
     private var m_latitude: Double?
     static let reuseIdentifier: String =  "LotteryStoreCollectionViewCell"

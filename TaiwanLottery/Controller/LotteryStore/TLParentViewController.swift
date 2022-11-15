@@ -9,11 +9,12 @@ import UIKit
 import MapKit
 import CoreLocation
 
-protocol LotteryListDataSource: AnyObject {
-    func passDataFromParent() -> [LotteryInfo]
+protocol TLLotteryListDataSource: AnyObject {
+    func passDataFromParent() -> [TLLotteryInfo]
 }
 // TL 
-class ParentViewController: UIViewController {
+class TLParentViewController: UIViewController {
+    // MARK: - Property
     // enum chnage better
     private var m_changeDistance = 1.0 {
         didSet {
@@ -30,11 +31,9 @@ class ParentViewController: UIViewController {
         }
     }
     
-    private var m_listLotteriesInfo = [LotteryInfo]()// LotteryStores(list: [])
-    // MARK: - Property
-    private lazy var m_vcMapView = LotteryStoresMapViewController()
-    
-    private lazy var m_vcLotteryStoreList = LotteryStoresListViewController()
+    private var m_listLotteriesInfo = [TLLotteryInfo]()
+    private lazy var m_vcMapView = TLLotteryStoresMapViewController()
+    private lazy var m_vcLotteryStoreList = TLLotteryStoresListViewController()
     private lazy var m_btnChange: UIBarButtonItem = {
         let barButtomItem = UIBarButtonItem(image: UIImage.switchModeMapMode,
                                             style: .plain, target: self,
@@ -63,6 +62,7 @@ class ParentViewController: UIViewController {
         } else {
             authorizationStatus = m_locationManager.authorizationStatus
         }
+        
         switch authorizationStatus {
         case .notDetermined:
             m_locationManager.requestWhenInUseAuthorization()
@@ -84,10 +84,10 @@ class ParentViewController: UIViewController {
                 longtitude: m_defaultLocation?.coordinate.longitude ?? 0, distance: 1)
             // string 多國語系
             let alertController = UIAlertController(
-                title: "定位權限已關閉",
-                message: "如要變更權限，請至 設定 > 隱私權 > 定位服務 開啟",
+                title: LString("AlertInfo:NavigationTitle"),
+                message: LString("AlertInfo:NavigationMessage"),
                 preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "確認", style: .default, handler: nil)
+            let okAction = UIAlertAction(title: LString("AlertAction:Confirmed"), style: .default, handler: nil)
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
         default:
@@ -104,13 +104,7 @@ class ParentViewController: UIViewController {
         add(childViewController: m_vcMapView,
             to: self.view)
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        print(m_locationManager.authorizationStatus)
-        //        locationManagerDidChangeAuthorization(m_locationManager)
-    }
-    
+        
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -118,7 +112,7 @@ class ParentViewController: UIViewController {
     // MARK: navigationsetting
     private func setupNavgation() {
         self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.darkOrangeColor]
-        self.navigationItem.title = "附近投注站"
+        self.navigationItem.title = LString("Text:Nearest Lottery Stores")
         let barButtomItem = m_btnChange
         self.navigationItem.setRightBarButton(barButtomItem, animated: true)
     }
@@ -178,7 +172,7 @@ extension UIViewController {
 
 // MARK: - fetch current(Location)
 
-extension ParentViewController: CLLocationManagerDelegate {
+extension TLParentViewController: CLLocationManagerDelegate {
     // MARK: API currentLocation MAPkit current location and fetch data on this
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         defer { m_currentLocation = locations.last }
@@ -201,7 +195,7 @@ extension ParentViewController: CLLocationManagerDelegate {
                     longtitude: CLLocationDegrees,
                     distance: Double) {
         TLHttpClient.shared.lotteryAPI(
-            method: .post, TLStationRequestDTO(lat: latitude, lon: longtitude, distance: distance), url: URL(string: TLWSPathHome.Station.urlPath())!) { [weak self] (result: Result<TLResponse<LotteryStores>, NetworkErrorConditions>) in
+            method: .post, TLStationRequestDTO(lat: latitude, lon: longtitude, distance: distance), url: URL(string: TLWSPathHome.Station.urlPath())!) { [weak self] (result: Result<TLResponse<TLLotteryStores>, TLNetworkErrorConditions>) in
                 switch result {
                 case .success(let decodedData):
                     self?.m_listLotteriesInfo = decodedData.content?.list.sorted(by: { $0.distance < $1.distance }) ?? []
@@ -209,8 +203,14 @@ extension ParentViewController: CLLocationManagerDelegate {
                     self?.m_vcLotteryStoreList.configureFromParent()
                 case .failure(let errordata):
                     // UIAlert error handling
-                    print(errordata.type)
-                    print(errordata)
+                    let alertController = UIAlertController(
+                        title: LString(errordata.type), message: "",
+                        preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: LString("AlertAction:Confirmed"), style: .default, handler: nil)
+                    alertController.addAction(okAction)
+                    DispatchQueue.main.async {
+                        self?.present(alertController, animated: true, completion: nil)
+                    }
                 }
             }
     }
@@ -221,6 +221,7 @@ extension ParentViewController: CLLocationManagerDelegate {
         } else {
             authorizationStatus = manager.authorizationStatus
         }
+        
         switch authorizationStatus {
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
@@ -244,10 +245,10 @@ extension ParentViewController: CLLocationManagerDelegate {
                 latitude: m_defaultLocation?.coordinate.latitude ?? 0,
                 longtitude: m_defaultLocation?.coordinate.longitude ?? 0, distance: 1)
             let alertController = UIAlertController(
-                title: "定位權限已關閉",
-                message: "如要變更權限，請至 設定 > 隱私權 > 定位服務 開啟",
+                title: LString("AlertInfo:NavigationTitle"),
+                message: LString("AlertInfo:NavigationMessage"),
                 preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "確認", style: .default, handler: nil)
+            let okAction = UIAlertAction(title: LString("AlertAction:Confirmed"), style: .default, handler: nil)
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
         default:
@@ -256,14 +257,14 @@ extension ParentViewController: CLLocationManagerDelegate {
     }
 }
 
-extension ParentViewController: LotteryListDataSource {
-    func passDataFromParent() -> [LotteryInfo] {
+extension TLParentViewController: TLLotteryListDataSource {
+    func passDataFromParent() -> [TLLotteryInfo] {
         return self.m_listLotteriesInfo
     }
 }
 
 // MARK: Navigation Map
-extension ParentViewController: PassoutNavigationDelegate {
+extension TLParentViewController: TLPassoutNavigationDelegate {
     func requestNavigation(location: CLLocationCoordinate2D) {
         let kAppleMaps = kAppleMaps
         guard let str = String(format: kAppleMaps, location.latitude, location.longitude).addingPercentEncoding(

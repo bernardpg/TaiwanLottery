@@ -7,20 +7,20 @@
 
 import UIKit
 
-protocol DropDownProtocol: AnyObject {
+protocol TLDropDownProtocol: AnyObject {
     func dropDownPressed(_ distance: LotteryDistances)
 }
 
-class DropDownBtn: UIButton, DropDownProtocol {
+class TLDropDownBtn: UIButton, TLDropDownProtocol {
     
-    var dropView = DropDownView()
+    var dropView = TLDropDownView()
     var height = NSLayoutConstraint()
     var isOpen = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.darkOrangeColor
-        dropView = DropDownView.init(frame: CGRect.init(x: 0, y: 0, width: 0, height: 0))
+        dropView = TLDropDownView.init(frame: CGRect.init(x: 0, y: 0, width: 0, height: 0))
         dropView.delegate = self
         dropView.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -88,11 +88,11 @@ class DropDownBtn: UIButton, DropDownProtocol {
     }
 }
 
-class DropDownView: UIView, UITableViewDelegate, UITableViewDataSource {
+class TLDropDownView: UIView, UITableViewDelegate, UITableViewDataSource {
     // allcase enumtype
     var dropDownOptions = [LotteryDistances]()
     var tvDropdown = UITableView()
-    weak var delegate: DropDownProtocol?
+    weak var delegate: TLDropDownProtocol?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -101,7 +101,7 @@ class DropDownView: UIView, UITableViewDelegate, UITableViewDataSource {
         tvDropdown.delegate = self
         tvDropdown.dataSource = self
         tvDropdown.translatesAutoresizingMaskIntoConstraints = false
-        tvDropdown.register(DropDownTableViewCell.self, forCellReuseIdentifier: DropDownTableViewCell.reuseIdentifier)
+        tvDropdown.register(TLDropDownTableViewCell.self, forCellReuseIdentifier: TLDropDownTableViewCell.reuseIdentifier)
         self.addSubview(tvDropdown)
         tvDropdown.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
         tvDropdown.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
@@ -123,9 +123,8 @@ class DropDownView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: DropDownTableViewCell.reuseIdentifier,
-            for: indexPath) as? DropDownTableViewCell else { return UITableViewCell()  }
-        // 公里 多國語系
+            withIdentifier: TLDropDownTableViewCell.reuseIdentifier,
+            for: indexPath) as? TLDropDownTableViewCell else { return UITableViewCell()  }
         cell.configureUI(title: LStringFormat("Text:Intkm", dropDownOptions[indexPath.row].rawValue))
         cell.layer.cornerRadius = 5
         cell.backgroundColor = UIColor.white

@@ -7,9 +7,9 @@
 
 import UIKit
 
-class DropDownTableViewCell: UITableViewCell {
+class TLDropDownTableViewCell: UITableViewCell {
     
-    static let reuseIdentifier = "\(DropDownTableViewCell.self)"
+    static let reuseIdentifier = "\(TLDropDownTableViewCell.self)"
     private lazy var m_lbTitle: UILabel = {
         let label =  UILabel()
         label.font = UIFont.pinFangTC

@@ -8,7 +8,7 @@
 import UIKit
 import MapKit
 
-class LotteryStoresListViewController: UIViewController {
+class TLLotteryStoresListViewController: UIViewController {
     // MARK: property
     private lazy var m_cvLotteryInfo: UICollectionView = {
         let layout: UICollectionViewLayout = {
@@ -19,15 +19,15 @@ class LotteryStoresListViewController: UIViewController {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.register(
             UINib(nibName: "LotteryStoreCollectionViewCell", bundle: nil),
-            forCellWithReuseIdentifier: LotteryStoreCollectionViewCell.reuseIdentifier)
+            forCellWithReuseIdentifier: TLLotteryStoreCollectionViewCell.reuseIdentifier)
         collection.backgroundColor = UIColor(red: 234, green: 234, blue: 234)
         collection.delegate = self
         collection.dataSource = self
         collection.showsHorizontalScrollIndicator = false
         return collection
     }()
-    weak var lotteryListDatasource: LotteryListDataSource?
-    weak var navigationLocaitonDelegate: PassoutNavigationDelegate?
+    weak var lotteryListDatasource: TLLotteryListDataSource?
+    weak var navigationLocaitonDelegate: TLPassoutNavigationDelegate?
     
     // MARK: View Life Cycle
     override func viewDidLoad() {
@@ -59,11 +59,11 @@ class LotteryStoresListViewController: UIViewController {
 }
 
 // MARK: - CollectionDelegate
-extension LotteryStoresListViewController: UICollectionViewDelegate {
+extension TLLotteryStoresListViewController: UICollectionViewDelegate {
 }
 
 // MARK: - DataSource
-extension LotteryStoresListViewController: UICollectionViewDataSource {
+extension TLLotteryStoresListViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let lotteryListDatasource = lotteryListDatasource?.passDataFromParent() else {
             return 0 }
@@ -74,8 +74,8 @@ extension LotteryStoresListViewController: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: LotteryStoreCollectionViewCell.reuseIdentifier,
-                for: indexPath) as? LotteryStoreCollectionViewCell else { return UICollectionViewCell()  }
+                withReuseIdentifier: TLLotteryStoreCollectionViewCell.reuseIdentifier,
+                for: indexPath) as? TLLotteryStoreCollectionViewCell else { return UICollectionViewCell()  }
             guard let listLottery =  lotteryListDatasource?.passDataFromParent() else { return UICollectionViewCell() }
             cell.backgroundColor = .white
             cell.delegate = self
@@ -90,7 +90,7 @@ extension LotteryStoresListViewController: UICollectionViewDataSource {
         }
 }
 
-extension LotteryStoresListViewController: UICollectionViewDelegateFlowLayout {
+extension TLLotteryStoresListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
@@ -114,9 +114,9 @@ extension LotteryStoresListViewController: UICollectionViewDelegateFlowLayout {
 }
 
 // MARK: - LotteryStorecvCellDelegate Navigation
-extension LotteryStoresListViewController:
-    LotteryStoreCellDelegate {
-    func passLocaitonInfo(location: Location) {
+extension TLLotteryStoresListViewController:
+    TLLotteryStoreCellDelegate {
+    func passLocaitonInfo(location: TLLocation) {
         let targetLocation = CLLocationCoordinate2D(latitude: location.lat, longitude: location.lon)
         navigationLocaitonDelegate?.requestNavigation(location: targetLocation)
     }

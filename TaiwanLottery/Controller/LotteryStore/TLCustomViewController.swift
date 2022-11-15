@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CustomViewController: UINavigationController {
+class TLCustomViewController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

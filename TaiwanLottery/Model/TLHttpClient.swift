@@ -10,7 +10,7 @@
 import Foundation
 import Alamofire
 
-enum NetworkErrorConditions: Int, Error {
+enum TLNetworkErrorConditions: Int, Error {
     // 300
     case requestTimeOut = -1001 // 100% loss
     case airplaneMode = -1009 // airplane mode
@@ -19,10 +19,10 @@ enum NetworkErrorConditions: Int, Error {
     
     var type: String {
         switch self {
-        case .requestTimeOut: return "網路狀態異常，請重新檢查連線或稍後再試"
-        case .airplaneMode: return "未連接上網路，請檢視網路連線"
-        case .noCellularMode: return "未連接上網路，請檢視網路連線"
-        case .parseResponse: return "網路狀態異常，請重新檢查連線或稍後再試"
+        case .requestTimeOut: return "AlertInfo:ResponseError"
+        case .airplaneMode: return "AlertInfo:NotReachable"
+        case .noCellularMode: return "AlertInfo:NotReachable"
+        case .parseResponse: return "AlertInfo:ResponseError"
         }
     }
         
@@ -43,7 +43,7 @@ class TLHttpClient {
     
     func lotteryAPI<E: Decodable>(
         method: HTTPMethod, _ requested: TLStationRequestDTO,
-        url: URL, completion: @escaping(Result<TLResponse<E>, NetworkErrorConditions>) -> Void) {
+        url: URL, completion: @escaping(Result<TLResponse<E>, TLNetworkErrorConditions>) -> Void) {
         
         var request = URLRequest(url: url)
         
@@ -59,7 +59,7 @@ class TLHttpClient {
             guard let data = data,
                   error == nil
             else {
-                return completion(.failure(NetworkErrorConditions(rawValue: error!.code) ?? .airplaneMode))  }
+                return completion(.failure(TLNetworkErrorConditions(rawValue: error!.code) ?? .airplaneMode))  }
                 do {
                     let decoder = JSONDecoder()
                     let createUserResponse = try decoder.decode(TLResponse<E>.self, from: data)

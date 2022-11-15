@@ -7,9 +7,14 @@
 */
 // 管理字串
 
+// MARK: - Generic alert
+"AlertAction:Confirmed" = "確認";
+
 // MARK: - Service error
 "AlertInfo:ResponseError" = "網路狀態異常，請重新檢查連線或稍後再試";
 "AlertInfo:NotReachable" = "未連接上網路，請檢視網路連線";
+"AlertInfo:NavigationTitle" = "定位權限已關閉";
+"AlertInfo:NavigationMessage" = "如要變更權限，請至 設定 > 隱私權 > 定位服務 開啟";
 
 // MARK: - Station  ％d // 投注站
 "Text:LotteryStorefloatkm" = "%.1f公里"; // 功能為區分

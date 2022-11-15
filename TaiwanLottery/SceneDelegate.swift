@@ -16,7 +16,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
-        let navViewController = CustomViewController(rootViewController: ParentViewController())
+        let navViewController = TLCustomViewController(rootViewController: TLParentViewController())
 
         window.rootViewController = navViewController
         self.window = window

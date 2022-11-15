@@ -32,11 +32,11 @@ struct TLResponse<E: Decodable>: Decodable {
     }
 }
 
-struct LotteryStores: Decodable {
-    var list: [LotteryInfo]
+struct TLLotteryStores: Decodable {
+    var list: [TLLotteryInfo]
 }
 
-struct LotteryInfo: Decodable {
+struct TLLotteryInfo: Decodable {
     let name: String
     let address: String
     let distance: Double
@@ -44,7 +44,7 @@ struct LotteryInfo: Decodable {
     let lon: Double
 }
 
-struct Location: Decodable {
+struct TLLocation: Decodable {
     var lat: Double
     var lon: Double
 }
